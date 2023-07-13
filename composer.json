@@ -1,0 +1,28 @@
+{
+    "name": "abuseipdb/abuseipdb-laravel",
+    "description": "Package to easily integrate the AbuseIPDB API with Laravel.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "AbuseipdbLaravel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Roshan Forde"
+        }
+    ],
+
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AbuseipdbLaravel\\AbuseIPDBLaravelServiceProvider"
+            ],
+            "aliases": {
+                "AbuseIPDBLaravel": "AbuseipdbLaravel\\AbuseIPDBLaravelFacade"
+            }
+        }
+    }
+}
