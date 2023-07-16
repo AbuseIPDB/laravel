@@ -1,6 +1,6 @@
 <?php 
 
-namespace AbuseipdbLaravel;
+namespace AbuseipdbLaravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use AbuseipdbLaravel\AbuseIPDBLaravel;

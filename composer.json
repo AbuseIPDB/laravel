@@ -9,7 +9,7 @@
     },
     "authors": [
         {
-            "name": "Roshan Forde"
+            "name": "Marathon Studios"
         }
     ],
 
@@ -18,10 +18,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "AbuseipdbLaravel\\AbuseIPDBLaravelServiceProvider"
+                "AbuseipdbLaravel\\Providers\\AbuseIPDBLaravelServiceProvider"
             ],
             "aliases": {
-                "AbuseIPDBLaravel": "AbuseipdbLaravel\\AbuseIPDBLaravelFacade"
+                "AbuseIPDB": "AbuseipdbLaravel\\Facades\\AbuseIPDB"
             }
         }
     }

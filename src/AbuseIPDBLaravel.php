@@ -5,17 +5,23 @@ namespace AbuseipdbLaravel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
 
+
+
 class AbuseIPDBLaravel{
+
+    private $endpoint = 'https://api.abuseipdb.com/api/v2/';
+    private $headers = [];
 
     /* function that all requests will be passed through */
     private function makeRequest($endpointName, $requestMethod = null, $parameters, $acceptType = 'application/json') : ?Response{
-      
-        $specificEndpoint = 'https://api.abuseipdb.com/api/v2/' . $endpointName;
+       
+        $this->headers['Accept'] = $acceptType;
+        $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
 
-        $client = Http::withHeaders([
-            'Accept' => $acceptType,
-            'Key' => env('ABUSEIPDB_API_KEY')
-        ])->withOptions(['verify' => false]);
+        $specificEndpoint = $this->endpoint . $endpointName;
+
+        //verify false only here for local development purpose
+        $client = Http::withHeaders($this->headers)->withOptions(['verify' => false]);
 
         if($requestMethod == 'post'){
             return $client->post($specificEndpoint, $parameters);
@@ -55,18 +61,17 @@ class AbuseIPDBLaravel{
         return $this->makeRequest('reports', 'get', $parameters);
     }
 
-     public function blackListEndpoint($confidenceMinimun = null, $limit = null, $plaintext = null, $onlyCountries = null, $exceptCountries = null, $ipVersion = null) : ?Response {
+     public function blackListEndpoint($plaintext = null, $confidenceMinimun = null, $limit = null, $onlyCountries = null, $exceptCountries = null, $ipVersion = null) : ?Response {
         $parameters = [];
 
-         if(isset($confidenceMinimum)){ $parameters['confidenceMinimum'] = $confidenceMinimum; }
+        if(isset($confidenceMinimum)){ $parameters['confidenceMinimum'] = $confidenceMinimum; }
         if(isset($limit)){ $parameters['limit'] = $limit; }
-        if(isset($plaintext)){ $parameters['plaintext'] = $plaintext; }
         if(isset($onlyCountries)){ $parameters['onlyCountries'] = $onlyCountries; }
         if(isset($exceptCountries)){ $parameters['exceptCountries'] = $exceptCountries; }
         if(isset($ipVersion)){ $parameters['ipVersion'] = $ipVersion; }
  
-        return $this->makeRequest('blacklist', 'get', $parameters);
-
+        return isset($plaintext) ?  $this->makeRequest('blacklist', 'get', $parameters, 'text/plain') : $this->makeRequest('blacklist', 'get', $parameters);
+    
     } 
 
     public function reportEndpoint($ip, $categories, $comment = null) : ?Response {
