@@ -5,20 +5,40 @@ namespace AbuseipdbLaravel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
 
+class AbuseIPDBLaravel {
 
-
-class AbuseIPDBLaravel{
-
-    private $endpoint = 'https://api.abuseipdb.com/api/v2/';
+    private $api_url = 'https://api.abuseipdb.com/api/v2/';
     private $headers = [];
 
+    private $endpoints = [
+    'check' => 'get', 
+    'reports' => 'get', 
+    'blacklist' =>'get',
+    'report' => 'post',
+    'check-block' => 'get',
+    'bulk-report' => 'post',
+    'clear-address' => 'delete',
+    ];
+
+    
+
     /* function that all requests will be passed through */
-    private function makeRequest($endpointName, $requestMethod = null, $parameters, $acceptType = 'application/json') : ?Response{
+    public function makeRequest($endpointName, $requestMethod = null, $parameters, $acceptType = 'application/json') : ?Response{
        
+        //convert request method to all lowercase, in case method is spelled with different case conventions
+        $adjustedRequestMethod = strtolower($requestMethod);
+
+        if($this->endpoints[$endpointName] == null){
+            //return error
+        }
+        else if ($this->endpoints[$endpointName] != $adjustedRequestMethod){
+            //return error
+        }
+
         $this->headers['Accept'] = $acceptType;
         $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
 
-        $specificEndpoint = $this->endpoint . $endpointName;
+        $specificEndpoint = $this->api_url . $endpointName;
 
         //verify false only here for local development purpose
         $client = Http::withHeaders($this->headers)->withOptions(['verify' => false]);
@@ -38,7 +58,8 @@ class AbuseIPDBLaravel{
 
     }
 
-    public function checkEndpoint($ipAddress, $maxAgeInDays = null, $verbose = null) : ?Response {
+    /* makes call to the check endpoint of api */
+    public function check($ipAddress, $maxAgeInDays = null, $verbose = null) : ?Response {
 
         $parameters = ['ipAddress' => $ipAddress];
 
@@ -49,7 +70,8 @@ class AbuseIPDBLaravel{
        return $this->makeRequest('check', 'get', $parameters);
     }
 
-    public function reportsEndpoint($ipAddress, $maxAgeInDays = null, $page = null, $perPage = null) : ?Response {
+    /* makes call to the reports endpoint of api */
+    public function reports($ipAddress, $maxAgeInDays = null, $page = null, $perPage = null) : ?Response {
 
         $parameters = ['ipAddress' => $ipAddress];
 
@@ -61,7 +83,8 @@ class AbuseIPDBLaravel{
         return $this->makeRequest('reports', 'get', $parameters);
     }
 
-     public function blackListEndpoint($plaintext = null, $confidenceMinimun = null, $limit = null, $onlyCountries = null, $exceptCountries = null, $ipVersion = null) : ?Response {
+    /* makes call to the blacklist endpoint of api */
+     public function blackList($plaintext = null, $confidenceMinimun = null, $limit = null, $onlyCountries = null, $exceptCountries = null, $ipVersion = null) : ?Response {
         $parameters = [];
 
         if(isset($confidenceMinimum)){ $parameters['confidenceMinimum'] = $confidenceMinimum; }
@@ -74,7 +97,8 @@ class AbuseIPDBLaravel{
     
     } 
 
-    public function reportEndpoint($ip, $categories, $comment = null) : ?Response {
+    /* makes call to report endpoint of api */
+    public function report($ip, $categories, $comment = null) : ?Response {
 
         $parameters = ['ip'=> $ip, 'categories' => $categories];
 
@@ -85,7 +109,8 @@ class AbuseIPDBLaravel{
         return $this->makeRequest('report', 'post', $parameters);
     }
 
-    public function checkBlockEndpoint($network, $maxAgeInDays = null) : ?Response  {
+    /* makes call to check-block endpoint of api */
+    public function checkBlock($network, $maxAgeInDays = null) : ?Response  {
 
         $parameters = ['network' => $network];
 
@@ -94,7 +119,8 @@ class AbuseIPDBLaravel{
         return $this->makeRequest('check-block', 'get', $parameters);
     }
 
-    public function bulkReportEndpoint($file) : ?Response {
+    /* makes call to bulk-report endpoint of api */
+    public function bulkReport($file) : ?Response {
 
         $parameters = ['multipart' => [
             'name' => 'csv',
@@ -104,7 +130,8 @@ class AbuseIPDBLaravel{
         return $this->makeRequest('bulk-report', 'post', $parameters);
     }
 
-    public function clearAddressEndPoint($ipAddress) : ?Response {
+    /* makes call to clear-address endpoint of api */
+    public function clearAddress($ipAddress) : ?Response {
 
         $parameters = ['ipAddress' => $ipAddress];
 
