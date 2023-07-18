@@ -12,7 +12,9 @@ class AbuseIPDBLaravelServiceProvider extends ServiceProvider{
     }
 
     public function register(){
+
         $this->app->singleton(AbuseIPDBLaravel::class);
+        
     }
 
     public function provides(){
