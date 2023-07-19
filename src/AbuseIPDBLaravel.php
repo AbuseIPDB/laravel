@@ -4,6 +4,7 @@ namespace AbuseipdbLaravel;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
+use AbuseipdbLaravel\ResponseObjects\ReportResponse;
 
 class AbuseIPDBLaravel {
 
@@ -82,7 +83,7 @@ class AbuseIPDBLaravel {
     }
 
     /* makes call to report endpoint of api */
-    public function report($ip, $categories, $comment = null) : ?AbuseResponse {
+    public function report($ip, $categories, $comment = null) : ?ResponseObjects\ReportResponse {
 
         $parameters = ['ip'=> $ip, 'categories' => $categories];
 
@@ -90,7 +91,7 @@ class AbuseIPDBLaravel {
         if(isset($comment)){
             $parameters['comment'] = $comment;
         }
-        return $this->makeRequest('report', 'post', $parameters);
+        return new ReportResponse($this->makeRequest('report', 'post', $parameters));
     }
 
 }
