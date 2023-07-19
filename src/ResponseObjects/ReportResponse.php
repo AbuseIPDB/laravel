@@ -16,7 +16,7 @@ class ReportResponse extends AbuseResponse{
         parent::__construct($httpResponse);
 
         $data = $httpResponse -> object();
-        
+        dd($data);
 
         $this -> ipAddress = $data->ipAddress;
         $this -> abuseConfidenceScore = $data->abuseConfidenceScore; 

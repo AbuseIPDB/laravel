@@ -83,7 +83,7 @@ class AbuseIPDBLaravel {
     }
 
     /* makes call to report endpoint of api */
-    public function report($ip, $categories, $comment = null) : ?ResponseObjects\ReportResponse {
+    public function report($ip, $categories, $comment = null) : ResponseObjects\ReportResponse | ResponseObjects\ErrorResponse {
 
         $parameters = ['ip'=> $ip, 'categories' => $categories];
 
@@ -91,7 +91,13 @@ class AbuseIPDBLaravel {
         if(isset($comment)){
             $parameters['comment'] = $comment;
         }
-        return new ReportResponse($this->makeRequest('report', 'post', $parameters));
+        $httpResponse = $this->makeRequest('report', 'post', $parameters);
+
+        return $httpResponse -> status() == 200 ? 
+        new ResponseObjects\ReportResponse($httpResponse) :
+        new ResponseObjects\ErrorResponse($httpResponse);
+        
+
     }
 
 }
