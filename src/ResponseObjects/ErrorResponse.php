@@ -6,14 +6,14 @@
 
 class ErrorResponse extends AbuseResponse {
 
-    protected string $detail;
-    protected int $status;
-    protected object $source;
+    public string $detail;
+    public int $status;
+    public object $source;
 
     public function __construct(HttpResponse $httpResponse){
         
         parent::__construct($httpResponse);
-        $data = $httpResponse -> object() -> errors[0];
+        $data = $this -> object() -> errors[0];
         
         $this -> detail = $data -> detail;
         $this -> status = $data -> status;

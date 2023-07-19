@@ -1,3 +1,9 @@
+$this->content_type = $headers["Content-Type"][0]; 
+        $this->cache_control = $headers["Cache-Control"][0];
+        $this->x_ratelimit_limit = $headers["X-RateLimit-Limit"][0];
+        $this->x_ratelimit_remaining = $headers["X-RateLimit-Remaining"][0];
+        $this->cf_cache_status = $this->header("CF-Cache-Status);
+
 /* makes call to the reports endpoint of api */
     public function reports($ipAddress, $maxAgeInDays = null, $page = null, $perPage = null) : ?Response {
 

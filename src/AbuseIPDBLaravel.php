@@ -21,32 +21,25 @@ class AbuseIPDBLaravel {
     'clear-address' => 'delete',
     ];
 
-    /* function that all requests will be passed through */
-    public function makeRequest($endpointName, $requestMethod = null, $parameters, $acceptType = 'application/json') : ?Response{
-       
-        //convert request method to all lowercase, in case method is spelled with different case conventions
-        $adjustedRequestMethod = strtolower($requestMethod);
 
+    /* function that all requests will be passed through */
+    public function makeRequest($endpointName, $parameters, $acceptType = 'application/json') : ?Response{
+       
         //check that endpoint passed in exists for the api
         if($this->endpoints[$endpointName] == null){
             //return error
-        }
+        } 
 
-        //check that the request method passed in matches method for the endpoint
-        if ($this->endpoints[$endpointName] != $adjustedRequestMethod){
-            //return error
-        }
+        $requestMethod = $this->endpoints[$endpointName];
+
 
         //check that accept type is application json, or plaintext for blacklist 
         if($acceptType != 'application/json' && ($acceptType == 'text/plain' && $endpoint != 'blacklist')){
             //return error
         }
 
-
         $this->headers['Accept'] = $acceptType;
         $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
-
-        $specificEndpoint = $this->api_url . $endpointName;
 
         $client = Http::withHeaders($this->headers);
 
@@ -55,49 +48,70 @@ class AbuseIPDBLaravel {
             $client->withOptions(['verify' => false]);
         }
 
-        if($requestMethod == 'post'){
-            return $client->post($specificEndpoint, $parameters);
-        }
-        else if($requestMethod == 'get'){
-            return $client->get($specificEndpoint, $parameters);
-        } 
-        else if ($requestMethod == 'delete'){
-            return $client->delete($specificEndpoint, $parameters);
-        }
-        else {
-            return null;
-        }
+        
+        return $client->$requestMethod($this->api_url . $endpointName, $parameters);
+
+        
+        // if($requestMethod == 'post'){
+        //     return $client->post();
+        // }
+        // else if($requestMethod == 'get'){
+        //     return $client->get();
+        // } 
+        // else if ($requestMethod == 'delete'){
+        //     return $client->delete($specificEndpoint, $parameters);
+        // }
+        // else {
+        //     return null;
+        // }
 
     }
 
     /* makes call to the check endpoint of api */
-    public function check($ipAddress, $maxAgeInDays = null, $verbose = null) : ?Response {
+    public function check($ipAddress, $maxAgeInDays = null, $verbose = null) : ResponseObjects\CheckResponse | ResponseObjects\ErrorResponse {
 
+        if(!isset($ipAddress)){
+            //return error: ipAddress must be sent with check request
+        }
         $parameters = ['ipAddress' => $ipAddress];
 
         //only send nullable parameters if present
         if(isset($maxAgeInDays)){ $parameters['maxAgeInDays'] = $maxAgeInDays; }
         if(isset($verbose)){ $parameters['verbose'] = $verbose; }
 
-       return $this->makeRequest('check', 'get', $parameters);
+        $httpResponse = $this->makeRequest('check', $parameters);
+
+        return $httpResponse -> status() == 200 ? 
+        new ResponseObjects\CheckResponse($httpResponse) :
+        new ResponseObjects\ErrorResponse($httpResponse);
     }
+    
 
     /* makes call to report endpoint of api */
     public function report($ip, $categories, $comment = null) : ResponseObjects\ReportResponse | ResponseObjects\ErrorResponse {
 
-        $parameters = ['ip'=> $ip, 'categories' => $categories];
+        if(!isset($ip)){ 
+            //return error: ip must be sent with request
+        }
+        if(!isset($categories)){
+            //return error: categories must be sent with request
+        }
+        if(!is_numeric($categories) || $categories > 30 || $categories < 1){
+            //return error: categories must be an AbuseIPDB category number between 1 and 30 
+        }
 
+        $parameters = ['ip'=> $ip, 'categories' => $categories];
+        
         //only send nullable parameters if present
         if(isset($comment)){
             $parameters['comment'] = $comment;
         }
-        $httpResponse = $this->makeRequest('report', 'post', $parameters);
+        $httpResponse = $this->makeRequest('report', $parameters);
 
         return $httpResponse -> status() == 200 ? 
         new ResponseObjects\ReportResponse($httpResponse) :
         new ResponseObjects\ErrorResponse($httpResponse);
-        
-
+    
     }
 
 }
