@@ -8,7 +8,7 @@ class ErrorResponse extends AbuseResponse {
 
     public string $detail;
     public int $status;
-    public object $source;
+    public string $parameter;
 
     public function __construct(HttpResponse $httpResponse){
         
@@ -17,8 +17,7 @@ class ErrorResponse extends AbuseResponse {
         
         $this -> detail = $data -> detail;
         $this -> status = $data -> status;
-        $this -> source = (object)[];
-        $this -> source -> parameter = $data -> source -> parameter;
+        $this -> parameter = $data -> source -> parameter;
 
     }
 }

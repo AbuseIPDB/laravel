@@ -4,6 +4,7 @@ namespace AbuseipdbLaravel\ResponseObjects;
 
 use AbuseipdbLaravel\ResponseObjects\AbuseResponse;
 use Illuminate\Http\Client\Response as HttpResponse;
+use AbuseipdbLaravel\ResponseObjects\ExtraClasses\CheckReport;
 
 class CheckResponse extends AbuseResponse
 {
@@ -23,7 +24,7 @@ class CheckResponse extends AbuseResponse
     public int $numDistinctUsers;
     public string $lastReportedAt;
     public string $countryName;
-    public array $reports;
+    public array $reports = [];
 
     public function __construct(HTTPResponse $httpResponse)
     {
@@ -49,7 +50,14 @@ class CheckResponse extends AbuseResponse
 
         //if not given because verbose was not passed in, then set these to blank values
         $this->countryName = $data -> countryName ?? '';
-        $this->reports = $data -> reports ?? [];
+
+        if(isset($data -> reports)){
+            foreach($data -> reports as $report){
+                array_push($this -> reports, new CheckReport($report));
+            }
+        }
+        
+
 
     }
 }
