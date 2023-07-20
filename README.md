@@ -17,7 +17,7 @@ ABUSEIPDB_API_KEY=your_key
 ## Usage
 
 ### Using Main Package Functions:
-The main functions of the package are stored in the namespace `Abuseipdb\AbuseIPDB.php`. For your convenience, this package uses a facade to allow access to the main functions. 
+The main functions of the package are stored in the namespace `Abuseipdb\AbuseIPDBLaravel.php`. For your convenience, this package uses a facade to allow access to the main functions. 
 To use the facade, including the following in the file you wish to use it in: 
 
 ```php
@@ -66,3 +66,23 @@ If your handler does not contain the aforementioned `$this->reportable`, then in
 
 Now your project will automatically report to AbuseIPDB if a SuspiciousOperationException is thrown. 
 
+## Main Functions
+
+This package implements functions to easily interact with endpoints of the AbuseIPDB API. 
+These functions are stored in the `AbuseIPDBLaravel.php` and can be called statically with the `AbuseIPDB` facade. 
+
+### makeRequest()
+
+The `makeRequest` function handles all API requests made through the package. The function's signature is as follows:
+
+```php
+public function makeRequest($endpointName, $parameters, $acceptType = 'application/json') : ?Response
+```
+`makeRequest` accepts 3 parameters, and returns a response of type `Illuminate\Http\Client\Response`.
+
+##### Parameters:
+
+`endpointName`: Name of the AbuseIPDB API endpoint where the request will be made. 
+The following endpoints are supported by the API: 
+    `check, reports, blacklist, report, check-block, bulk-report, clear-address`
+Please refer the [AbuseIPDB API documentation](https://docs.abuseipdb.com/) for more information about the API.
