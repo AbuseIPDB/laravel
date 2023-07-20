@@ -46,16 +46,13 @@ Inside of the Handler's `register()` function:
 
 ```
  $this->stopIgnoring(SuspiciousOperationException::class);
-
 ```
 
 Inside of register function's `$this->reportable(function (Throwable $e) {}`
 ```
-
 if ($e instanceof SuspiciousOperationException) {
     AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
 }
-
 ```            
 If your handler does not contain the aforementioned `$this->reportable`, then include the following:
  $this->reportable(function (Throwable $e) {
