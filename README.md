@@ -22,7 +22,10 @@ To use the facade, including the following in the file you wish to use it in:
 
 ```
 use AbuseipdbLaravel\Facades\AbuseIPDB;
-
+```
+Then the functions can be called statically:
+```
+$response = AbuseIPDB::check('127.0.0.1');
 ```
 
 These functions will be explained in greater detail later in the documentation. 
