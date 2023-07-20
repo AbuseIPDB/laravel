@@ -47,23 +47,8 @@ class AbuseIPDBLaravel {
         if(env('APP_ENV') == 'local'){
             $client->withOptions(['verify' => false]);
         }
-
-        
+     
         return $client->$requestMethod($this->api_url . $endpointName, $parameters);
-
-        
-        // if($requestMethod == 'post'){
-        //     return $client->post();
-        // }
-        // else if($requestMethod == 'get'){
-        //     return $client->get();
-        // } 
-        // else if ($requestMethod == 'delete'){
-        //     return $client->delete($specificEndpoint, $parameters);
-        // }
-        // else {
-        //     return null;
-        // }
 
     }
 

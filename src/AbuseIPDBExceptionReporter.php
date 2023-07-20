@@ -18,7 +18,6 @@ public static function reportSuspiciousOperationException() : void {
     $comment = "Suspicious Operation. Request content:\n" . $params;
 
     $response = AbuseIPDB::report(ip: $attackingAddress, categories: 21, comment: $comment);
-    dd($response->headers());
 }
 
 } 
