@@ -33,6 +33,6 @@
         "orchestra/testbench": "dev-develop"
     },
     "require": {
-        "laravel/laravel": "^10.0"
+        "laravel/framework": "^10.0"
     }
 }
