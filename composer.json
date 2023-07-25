@@ -7,6 +7,11 @@
             "AbuseipdbLaravel\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "AbuseipdbLaravel\\Tests\\": "tests"
+        }
+    },
     "authors": [
         {
             "name": "Marathon Studios"
@@ -26,5 +31,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "dev-develop"
+    },
+    "require": {
+        "laravel/laravel": "^10.0"
     }
 }
