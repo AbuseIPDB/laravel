@@ -222,7 +222,7 @@ InvalidParameterException //Parameter passed in was invalid for the API.
 MissingParameterException //A required parameter for an endpoint was missing.
 PaymentRequiredException //402 error was thrown by API, indicating feature needs a higher subscription.
 TooManyRequestsException //429 error was thrown by API, indicating request limit has been exceeded.
-UnprocessableContentException //422 error was thrown by API, indicating request parameters could not be handled.
+UnprocessableContentException //422 error was thrown by API, indicating request parameters could not be handled, either missing or incorrect.
 ```
 To handle these exceptions, use like the following:
 

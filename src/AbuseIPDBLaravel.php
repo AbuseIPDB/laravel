@@ -38,8 +38,12 @@ class AbuseIPDBLaravel
         }
 
         $this->headers['Accept'] = $acceptType;
-        $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
 
+        if(env('ABUSEIPDB_API_KEY') != null){
+            $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
+        }else{
+            throw new Exceptions\MissingAPIKeyException("ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.");
+        }
         $client = Http::withHeaders($this->headers);
 
         //verify false here for local development purposes

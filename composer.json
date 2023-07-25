@@ -30,7 +30,8 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "dev-develop"
+        "orchestra/testbench": "dev-develop",
+        "mockery/mockery": "1.6.x-dev"
     },
     "require": {
         "laravel/laravel": "^10.0"
