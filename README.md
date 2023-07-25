@@ -132,7 +132,7 @@ use AbuseipdbLaravel\ResponseObjects\CheckResponse;
 $response = new CheckResponse($httpResponse);
 
 $response -> ipAddress;
-$response -> isPublic
+$response -> isPublic;
 $response -> ipVersion;
 $response -> isWhitelisted
 $response -> abuseConfidenceScore;
@@ -141,7 +141,7 @@ $response -> usageType;
 $response -> isp;
 $response -> domain;
 $response -> hostnames;
-$response -> isTor
+$response -> isTor;
 $response -> totalReports
 $response -> numDistinctUsers;
 $response -> lastReportedAt;
@@ -176,7 +176,7 @@ PaymentRequiredException //402 error was thrown by API, indicating feature needs
 TooManyRequestsException //429 error was thrown by API, indicating request limit has been exceeded.
 UnprocessableContentException //422 error was thrown by API, indicating request parameters could not be handled.
 ```
-To handle these exceptions, use the following:
+To handle these exceptions, use like the following:
 
 ```php
     use AbuseipdbLaravel\Exceptions; 
