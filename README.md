@@ -107,6 +107,39 @@ When requests are made to these endpoints, endpoint-specific response objects wi
 If there is an error, a custom ErrorResponse object will be returned. 
 Objects are made to package the responses received by the API, and contain accessible properties that store the data from the response. 
 
+### check() method
+
+The `check()` method makes a request to the check endpoint of the AbuseIPDB API. Its signature is as follows: 
+
+```php
+public function check($ipAddress, $maxAgeInDays = null, $verbose = null): ResponseObjects\CheckResponse
+```
+#### Parameters 
+
+`ipAddress`: IP address to be checked by the API.
+`maxAgeInDays`: Optional: Age of reports used to check the IP address. Must be between 1 and 365 if set, default is 30.
+`verbose`: Optional: If set, returns full reports array for the IP address.
+
+#### Return Type
+
+Returns a `ResponseObjects\CheckResponse` object. Please refer to documentation below regarding this object.
+
+### report() method 
+
+The `report()` method makes a request to the report endpoint of the AbuseIPDB API. Its signature is as follows: 
+```php
+public function report($ip, $categories, $comment = null): ResponseObjects\ReportResponse
+```
+#### Parameters
+
+`ip`: IP address to be reported.
+`categories`: Single category or array of categories, provided as numbers between 1 and 30. Please refer to AbuseIPDB's reference on their category numbers [here](https://www.abuseipdb.com/categories).
+`comment`: Optional: Include information about the attack, such as an error log message.
+
+#### Return Type
+
+Returns a `ResponseObjects\ReportResponse` object. Please refer to documentation below regarding this object.
+
 ### Response Objects
 All custom response objects extend a custom AbuseResponse class, which extracts certain headers from the response and makes them accessible. 
 
@@ -118,10 +151,25 @@ use AbuseipdbLaravel\ResponseObjects;
 Then those object types can be referenced as follows:
 
 ```php
+ResponseObjects\AbuseResponse
 ResponseObjects\CheckResponse
 ResponseObjects\ReportResponse
 ```
+#### AbuseResponse
+The AbuseResponse makes specific headers sent with a response from AbuseIPDB's API more accessible. The following properties are accessible from the object:
 
+```php
+use AbuseipdbLaravel\ResposneObjects\AbuseResponse; 
+$response = new AbuseResponse($httpResponse);
+
+$response -> x_ratelimit_limit
+$response -> x_ratelimit_remaining;
+$response -> content_type;
+$response -> cache_control;
+$response -> cf_cache_status;
+```
+
+Since the custom endpoint-specific response objects extend the AbuseResponse object, you may access these properties from the child object. You may also access any method from the `Illuminate\Http\Client\Response` class, such as `headers()` or `status()`.
 #### CheckResponse
 
 The CheckResponse object reflects the response data given from making a check response to the API. 
