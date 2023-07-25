@@ -239,3 +239,5 @@ To handle these exceptions, use like the following:
     }
 ```
 
+Additionally, be wary of the `ArgumentCountError` that will be thrown if any functions are called with the incorrect number of arguments.
+

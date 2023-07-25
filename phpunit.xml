@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit> 
-<testsuites>
-        <testsuite name="Package Tests">
-            <directory suffix=".php">./tests/</directory>
-        </testsuite>
-    </testsuites>
+<phpunit>
+	<php>
+        <env name="ABUSEIPDB_API_KEY" value="2f29852e9012bd8d479574c52f5ace16ede748085082c8c87fbcb154fcda7e34f038a92523ce9a06"/>
+        <env name="APP_ENV" value="local"/>
+	</php>
+	<testsuites>
+		<testsuite name="Package Tests">
+			<directory suffix=".php">
+				./tests/
+			</directory>
+			<exclude>./tests/TestCase.php</exclude>
+		</testsuite>
+	</testsuites>
 </phpunit>

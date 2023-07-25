@@ -1,11 +1,12 @@
 <?php
 namespace AbuseipdbLaravel\Tests;
 
+use Mockery;
+
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $enablesPackageDiscoveries = true;
-    protected $client; //to be used for mock guzzlehttp instance
-
+    
     //register packages to the test class
     protected function getPackageProviders($app){
         return [
@@ -20,15 +21,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
         ];
     }
 
-    public function setUp(){
+    public function setUp() : void{
         parent::setUp();
-        $this->mockClient();
-    }
-
-    protected function mockClient(){
-        $this->client = Mockery::mock(\GuzzleHttp\Client::class);
-        $this->app->instance(\GuzzleHttp\Client::class, $this->client);
-
     }
 
 }

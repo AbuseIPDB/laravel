@@ -26,15 +26,18 @@ class AbuseIPDBLaravel
     {
 
         //check that endpoint passed in exists for the api
-        if ($this->endpoints[$endpointName] == null) {
+        if (!array_key_exists($endpointName, $this->endpoints)) {
             throw new Exceptions\InvalidEndpointException("Endpoint name given is invalid.");
         }
 
         $requestMethod = $this->endpoints[$endpointName];
 
         //check that accept type is application json, or plaintext for blacklist
-        if ($acceptType != 'application/json' && ($acceptType == 'text/plain' && $endpoint != 'blacklist')) {
-            throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
+        if ($acceptType != 'application/json') {
+            if($acceptType == 'text/plain' && $endpoint == 'blacklist'){
+                //do nothing
+            }
+            else throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
         }
 
         $this->headers['Accept'] = $acceptType;
