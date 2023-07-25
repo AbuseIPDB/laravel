@@ -108,6 +108,7 @@ If there is an error, a custom ErrorResponse object will be returned.
 Objects are made to package the responses received by the API, and contain accessible properties that store the data from the response. 
 
 ### Response Objects
+All custom response objects extend a custom AbuseResponse class, which extracts certain headers from the response and makes them accessible. 
 
 When handling responses that call an endpoint with custom responses, include the following at the top of file with requesting code: 
 
