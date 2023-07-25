@@ -120,22 +120,74 @@ Then those object types can be referenced as follows:
 ```php
 ResponseObjects\CheckResponse
 ResponseObjects\ReportResponse
-ResponseObjects\ErrorResponse
 ```
-#### ErrorResponse 
 
-ErrorResponse object is returned when an error occurs. The object contains 3 accessible properties:
+#### CheckResponse
 
-`detail`: Explains the reason that the error was thrown. 
-`status`: The HTTP error code returned. 
-`parameter`: Identifies the source of the error, e.g. "ip". 
-
-Example usage: 
+The CheckResponse object reflects the response data given from making a check response to the API. 
+The following properties are included:
 
 ```php
-$response = AbuseIPDB::check('127.0.0.1', 31); //error will be thrown since 31 is invalid category
-if($response instanceof ResponseObjects\ErrorResponse){
-    $statusCode = $response -> status; //example access to object property
-}
+use AbuseipdbLaravel\ResponseObjects\CheckResponse; 
+$response = new CheckResponse($httpResponse);
+
+$response -> ipAddress;
+$response -> isPublic
+$response -> ipVersion;
+$response -> isWhitelisted
+$response -> abuseConfidenceScore;
+$response -> countryCode;
+$response -> usageType;
+$response -> isp;
+$response -> domain;
+$response -> hostnames;
+$response -> isTor
+$response -> totalReports
+$response -> numDistinctUsers;
+$response -> lastReportedAt;
+$response -> countryName;
+$response -> reports 
+
+```
+
+#### ReportResponse
+
+The ReportResponse object reflects the response data given from making a report response to the API. 
+The following properties are included:
+
+```php
+use AbuseipdbLaravel\ResponseObjects\ReportResponse; 
+$response = new ReportResponse($httpResponse);
+
+$response -> $ipAddress;
+$response -> $abuseConfidenceScore; 
+```
+
+## Exceptions
+
+In the event of an error, this package will throw an expection from the `Abuseipdb\Exceptions` namespace. Those exceptions include the following:
+
+```php
+InvalidAcceptTypeException //Accept Type was set to type other than application/json or text/plain.
+InvalidEndpointException //Endpoint name provided was not a valid endpoint for the API.
+InvalidParameterException //Parameter passed in was invalid for the API.
+MissingParameterException //A required parameter for an endpoint was missing.
+PaymentRequiredException //402 error was thrown by API, indicating feature needs a higher subscription.
+TooManyRequestsException //429 error was thrown by API, indicating request limit has been exceeded.
+UnprocessableContentException //422 error was thrown by API, indicating request parameters could not be handled.
+```
+To handle these exceptions, use the following:
+
+```php
+    use AbuseipdbLaravel\Exceptions; 
+
+    try {
+        /* some code */
+    }
+    catch(Throwable $e){
+        if($e instanceof Exceptions\TooManyRequestsException){
+            //429 was thrown, do something to address issue
+        }
+    }
 ```
 
