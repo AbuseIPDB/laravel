@@ -14,7 +14,6 @@
     ],
 
     "minimum-stability": "dev",
-    "require": {},
     "extra": {
         "laravel": {
             "providers": [
@@ -24,5 +23,8 @@
                 "AbuseIPDB": "AbuseipdbLaravel\\Facades\\AbuseIPDB"
             }
         }
+    },
+    "require-dev": {
+        "orchestra/testbench": "dev-develop"
     }
 }
