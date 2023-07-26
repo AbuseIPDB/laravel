@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Http;
 
 class AbuseIPDBLaravel
 {
+    
+    private $api_url = 'https://api.abuseipdb.com/api/v2/'; //base url for api, used for all requests
+    private $headers = []; // array used to store the headers
 
-    private $api_url = 'https://api.abuseipdb.com/api/v2/';
-    private $headers = [];
-
+    /* array of all endpoints available by the api, and their respective HTTP request verbs */
     private $endpoints = [
         'check' => 'get',
         'reports' => 'get',
@@ -30,9 +31,10 @@ class AbuseIPDBLaravel
             throw new Exceptions\InvalidEndpointException("Endpoint name given is invalid.");
         }
 
+        //grab the proper request method from the endpoints array
         $requestMethod = $this->endpoints[$endpointName];
 
-        //check that accept type is application json, or plaintext for blacklist
+        //check that accept type is application json, or plaintext for blacklist, if not throw error
         if ($acceptType != 'application/json') {
             if($acceptType == 'text/plain' && $endpoint == 'blacklist'){
                 //do nothing
@@ -40,37 +42,49 @@ class AbuseIPDBLaravel
             else throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
         }
 
+        //give the accept type to the headers array
         $this->headers['Accept'] = $acceptType;
 
+        //get the api key from the env, if not present throw an error
         if(env('ABUSEIPDB_API_KEY') != null){
             $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
         }else{
             throw new Exceptions\MissingAPIKeyException("ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.");
         }
+
+        //create client and assign headers array
         $client = Http::withHeaders($this->headers);
 
-        //verify false here for local development purposes
+        //verify false here for local development purposes, to avoid certificate issues
         if (env('APP_ENV') == 'local') {
             $client->withOptions(['verify' => false]);
         }
 
+        //make the request to the api
         $response = $client->$requestMethod($this->api_url . $endpointName, $parameters);
 
+        //extract the status code
         $status = $response->status();
 
         if ($status == 200) {
             return $response;
         } else {
+            //check for different possible error codes
             $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
             if ($status == 429) {
                 throw new Exceptions\TooManyRequestsException($message);
             }
-            if ($status == 402) {
+            else if ($status == 402) {
                 throw new Exceptions\PaymentRequiredException($message);
             }
-            if ($status == 422) {
+            else if ($status == 422) {
                 throw new Exceptions\UnprocessableContentException($message);
             }
+            else {
+                //Error is not one of the conventional errors thrown by application
+                throw new Exceptions\UnconventionalErrorException($message);
+            }
+
         }
         return null;
     }
@@ -78,7 +92,7 @@ class AbuseIPDBLaravel
     /* makes call to the check endpoint of api */
     public function check($ipAddress, $maxAgeInDays = null, $verbose = null): ResponseObjects\CheckResponse
     {
-
+        //throw an error if ipAddress is not present
         if (!isset($ipAddress)) {
             throw new Exceptions\MissingParameterException("ipAddress must be sent with check request.");
         }
@@ -97,23 +111,8 @@ class AbuseIPDBLaravel
 
         $httpResponse = $this->makeRequest('check', $parameters);
 
-       // $status = $httpResponse->status();
-
         return new ResponseObjects\CheckResponse($httpResponse);
-        /* else {
-          $message = $httpResponse->object()->errors[0]->detail;
-            if ($status == 429) {
-                throw new Exceptions\TooManyRequestsException($message);
-            }
-            if ($status == 402) {
-                throw new Exceptions\PaymentRequiredException($message);
-            }
-            if ($status == 422) {
-                throw new Exceptions\UnprocessableContentException($message);
-            }
-        }
- */
-        //new ResponseObjects\ErrorResponse($httpResponse);
+
     }
 
     /* makes call to report endpoint of api */
@@ -126,10 +125,18 @@ class AbuseIPDBLaravel
         if (!isset($categories)) {
             throw new Exceptions\MissingParameterException("categories must be sent with check request.");
         }
-        /* if(!is_numeric($categories) || $categories > 30 || $categories < 1){
-        //return error: categories must be an AbuseIPDB category number between 1 and 30
+        if(is_array($categories)){
+            foreach($categories as $cat){
+                if(!is_numeric($categories) || $categories > 30 || $categories < 1){
+                    throw new Exceptions\InvalidParameterException("Individual category must be a number between 1 and 30");
+                }
+            }
+        }else{
+            if(!is_numeric($categories) || $categories > 30 || $categories < 1){
+                throw new Exceptions\InvalidParameterException("Individual category must be a number between 1 and 30");
+            }
         }
-         */
+
         $parameters = ['ip' => $ip, 'categories' => $categories];
 
         //only send nullable parameters if present
@@ -139,22 +146,7 @@ class AbuseIPDBLaravel
 
         $httpResponse = $this->makeRequest('report', $parameters);
 
-      //  $status = $httpResponse->status();
-       
         return new ResponseObjects\ReportResponse($httpResponse);
-         /* else {
-            $message = "AbuseIPDB: " . $httpResponse->object()->errors[0]->detail;
-            if ($status == 429) {
-                throw new Exceptions\TooManyRequestsException($message);
-            }
-            if ($status == 402) {
-                throw new Exceptions\PaymentRequiredException($message);
-            }
-            if ($status == 422) {
-                throw new Exceptions\UnprocessableContentException($message);
-            }
-        } */
-
     }
 
 }
