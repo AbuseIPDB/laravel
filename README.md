@@ -117,7 +117,9 @@ public function check($ipAddress, $maxAgeInDays = null, $verbose = null): Respon
 #### Parameters 
 
 `ipAddress`: IP address to be checked by the API.
+
 `maxAgeInDays`: Optional: Age of reports used to check the IP address. Must be between 1 and 365 if set, default is 30.
+
 `verbose`: Optional: If set, returns full reports array for the IP address.
 
 #### Return Type
@@ -133,7 +135,9 @@ public function report($ip, $categories, $comment = null): ResponseObjects\Repor
 #### Parameters
 
 `ip`: IP address to be reported.
+
 `categories`: Single category or array of categories, provided as numbers between 1 and 30. Please refer to AbuseIPDB's reference on their category numbers <a href="https://www.abuseipdb.com/categories" target="_blank">here</a>.
+
 `comment`: Optional: Include information about the attack, such as an error log message.
 
 #### Return Type
