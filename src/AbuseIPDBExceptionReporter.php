@@ -8,7 +8,7 @@ use AbuseipdbLaravel\Facades\AbuseIPDB;
 class AbuseIPDBExceptionReporter
 {
 
-    public static function reportSuspiciousOperationException(): void
+    public static function reportSuspiciousOperationException(): ?\ResponseObjects\ReportResponse
     {
 
         $attackingAddress = request()->ip();
@@ -20,10 +20,12 @@ class AbuseIPDBExceptionReporter
 
         try {
             $response = AbuseIPDB::report(ip: $attackingAddress, categories: 21, comment: $comment);
+            return $response;
         } catch (TooManyRequestsException $e) {
             /* This will neglect the exception by default
             If you would like to implement any logging you may do so here
             */
         }
+        return null;
     }
 }

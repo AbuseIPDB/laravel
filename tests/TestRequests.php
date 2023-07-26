@@ -18,11 +18,7 @@ class TestRequests extends TestCase
         $response = AbuseIPDB::check('127.0.0.1');
         $this->assertInstanceOf(ResponseObjects\CheckResponse::class, $response);
     }
-    /* public function testReportResponseType()
-    {
-    $response = AbuseIPDB::report('127.0.0.2', 21);
-    $this->assertInstanceOf(ResponseObjects\ReportResponse::class,$response);
-    }  */
+    
 
     public function testAbuseResponseProperties()
     {
@@ -55,6 +51,8 @@ class TestRequests extends TestCase
 
     }
 
+    
+
     public function testCheckResponseWithoutVerbose()
     {
         $response = AbuseIPDB::check('154.198.211.170');
@@ -70,4 +68,16 @@ class TestRequests extends TestCase
         $this->assertNotEmpty($response->countryName);
     }
 
+    /* test for report endpoint are commented out since they cannot be run more than once every 15 minutes*/
+    /* public function testReportResponseType()
+    {
+    $response = AbuseIPDB::report('127.0.0.2', 21);
+    $this->assertInstanceOf(ResponseObjects\ReportResponse::class,$response);
+    }  */
+
+    /* public function testReportResponseProperties(){
+        $response = AbuseIPDB::report('127.0.0.1', 21);
+        $this->assertObjectHasProperty('ipAddress', $response);
+        $this->assertObjectHasProperty('abuseConfidenceScore', $response);
+    } */
 }
