@@ -8,7 +8,7 @@ To install using Composer:
 
     composer require abuseipdb/abuseipdb-laravel
 
-Add `ABUSEIPDB_API_KEY` to your `.env` file. Keys are made on the [AbuseIPDB website](https://www.abuseipdb.com/) for users with accounts. 
+Add `ABUSEIPDB_API_KEY` to your `.env` file. Keys are made on the <a href="https://www.abuseipdb.com/" target="_blank">AbuseIPDB website</a> for users with accounts. 
 
 ```
 ABUSEIPDB_API_KEY=your_key
@@ -87,7 +87,7 @@ The following endpoints are supported by the API:
 
 `check, reports, blacklist, report, check-block, bulk-report, clear-address`
 
-Please refer the [AbuseIPDB API documentation](https://docs.abuseipdb.com/) for more information about the API.
+Please refer the <a href="https://docs.abuseipdb.com/" target="_blank">AbuseIPDB API Documentation</a>for more information about the API.
 
 This function will automatically make the correct HTTP Request type, whether the endpoint needs `get`, `post` or `delete`.
 
@@ -97,7 +97,7 @@ This function will automatically make the correct HTTP Request type, whether the
 
 #### Return Type: 
  
-This function returns a `Illuminate\Http\Client\Response` object. The documentation for this object is [here](https://laravel.com/api/10.x/Illuminate/Http/Client/Response.html).
+This function returns a `Illuminate\Http\Client\Response` object. The documentation for this object is <a href="https://laravel.com/api/10.x/Illuminate/Http/Client/Response.html" target = "_blank">here</a>.
 
 ### Endpoint specific methods
 As of current version, this package also has methods to request the check and report endpoints. 
@@ -133,7 +133,7 @@ public function report($ip, $categories, $comment = null): ResponseObjects\Repor
 #### Parameters
 
 `ip`: IP address to be reported.
-`categories`: Single category or array of categories, provided as numbers between 1 and 30. Please refer to AbuseIPDB's reference on their category numbers [here](https://www.abuseipdb.com/categories).
+`categories`: Single category or array of categories, provided as numbers between 1 and 30. Please refer to AbuseIPDB's reference on their category numbers <a href="https://www.abuseipdb.com/categories" target="_blank">here</a>.
 `comment`: Optional: Include information about the attack, such as an error log message.
 
 #### Return Type
@@ -239,5 +239,5 @@ To handle these exceptions, use like the following:
     }
 ```
 
-Additionally, be wary of the `ArgumentCountError` that will be thrown if any functions are called with the incorrect number of arguments.
+Additionally, be wary of the <a href="https://www.php.net/manual/en/class.argumentcounterror.php" target="_blank">ArgumentCountError</a> that will be thrown if any functions are called with the incorrect number of arguments.
 
