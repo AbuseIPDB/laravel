@@ -2,13 +2,14 @@
 
 namespace AbuseipdbLaravel;
 
-use AbuseidbLaravel\Exceptions\TooManyRequestsException;
+use AbuseipdbLaravel\Exceptions\TooManyRequestsException;
+use AbuseipdbLaravel\ResponseObjects;
 use AbuseipdbLaravel\Facades\AbuseIPDB;
 
 class AbuseIPDBExceptionReporter
 {
 
-    public static function reportSuspiciousOperationException(): ?\ResponseObjects\ReportResponse
+    public static function reportSuspiciousOperationException(): ?ResponseObjects\ReportResponse
     {
         //grab the ip address from the request, which is deemed suspicious by the exception being thrown
         $attackingAddress = request()->ip();
@@ -26,7 +27,7 @@ class AbuseIPDBExceptionReporter
         try {
             $response = AbuseIPDB::report(ip: $attackingAddress, categories: 21, comment: $comment);
             return $response; //return the response if it goes through
-        } catch (TooManyRequestsException $e) {
+        } catch (Exceptions\TooManyRequestsException $e) {
             /* This will neglect the exception by default
             If you would like to implement any logging you may do so here
             */
