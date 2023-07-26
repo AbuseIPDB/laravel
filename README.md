@@ -54,7 +54,7 @@ if ($e instanceof SuspiciousOperationException) {
     AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
 }
 ```            
-If your handler does not contain the aforementioned `$this->reportable`, then include the following:
+If your handler's `register()` does not contain the aforementioned `$this->reportable`, then include the following:
 ```php
  $this->reportable(function (Throwable $e) {
     if ($e instanceof SuspiciousOperationException) {
