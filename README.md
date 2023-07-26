@@ -87,7 +87,7 @@ The following endpoints are supported by the API:
 
 `check, reports, blacklist, report, check-block, bulk-report, clear-address`
 
-Please refer the <a href="https://docs.abuseipdb.com/" target="_blank">AbuseIPDB API Documentation</a>for more information about the API.
+Please refer the <a href="https://docs.abuseipdb.com/" target="_blank">AbuseIPDB API Documentation</a> for more information about the API.
 
 This function will automatically make the correct HTTP Request type, whether the endpoint needs `get`, `post` or `delete`.
 
