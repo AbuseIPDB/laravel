@@ -6,7 +6,7 @@ Package to easily integrate AbuseIPDB API with your Laravel project.
 
 To install using Composer:
 
-    composer require abuseipdb/abuseipdb-laravel
+    composer require abuseipdb/laravel
 
 Add `ABUSEIPDB_API_KEY` to your `.env` file. Keys are made on the <a href="https://www.abuseipdb.com/" target="_blank">AbuseIPDB website</a> for users with accounts. 
 

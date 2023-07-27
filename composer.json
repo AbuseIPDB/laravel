@@ -1,5 +1,5 @@
 {
-    "name": "abuseipdb/abuseipdb-laravel",
+    "name": "abuseipdb/laravel",
     "description": "Package to easily integrate the AbuseIPDB API with Laravel.",
     "type": "library",
     "autoload": {
