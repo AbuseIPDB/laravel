@@ -14,6 +14,10 @@ Add `ABUSEIPDB_API_KEY` to your `.env` file. Keys are made on the <a href="https
 ABUSEIPDB_API_KEY=your_key
 ```
 
+Remember, the AbuseIPDB API keys are to be treated like private keys -- don't have them publicly accessible!
+
+For your application's safety, your `.env` file should never be public or committed to source control.
+
 ## Usage
 
 ### Using Main Package Functions:
@@ -227,6 +231,7 @@ MissingParameterException //A required parameter for an endpoint was missing.
 PaymentRequiredException //402 error was thrown by API, indicating feature needs a higher subscription.
 TooManyRequestsException //429 error was thrown by API, indicating request limit has been exceeded.
 UnprocessableContentException //422 error was thrown by API, indicating request parameters could not be handled, either missing or incorrect.
+UnconventionalErrorException //Error code other than 402, 422, or 429 was returned by the API.
 ```
 To handle these exceptions, use like the following:
 
@@ -244,4 +249,9 @@ To handle these exceptions, use like the following:
 ```
 
 Additionally, be wary of the <a href="https://www.php.net/manual/en/class.argumentcounterror.php" target="_blank">ArgumentCountError</a> that will be thrown if any functions are called with the incorrect number of arguments.
+
+## Testing
+
+If using the provided test suite, please note that the test will only run error-free once every 15 minutes. The AbuseIPDB API will throw an error if an IP address is reported more than once in a period of 15 minutes, so any report endpoint tests will throw errors. Any tests that do not use the report endpoint will still work without any waiting period. 
+
 

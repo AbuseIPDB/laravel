@@ -5,9 +5,11 @@ namespace AbuseIPDB;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
+//require_once('./AbuseCategory.php');
+
 class AbuseIPDBLaravel
 {
-    
+
     private $api_url = 'https://api.abuseipdb.com/api/v2/'; //base url for api, used for all requests
     private $headers = []; // array used to store the headers
 
@@ -20,6 +22,32 @@ class AbuseIPDBLaravel
         'check-block' => 'get',
         'bulk-report' => 'post',
         'clear-address' => 'delete',
+    ];
+
+    private $categories = [
+        'DNS_Compromise' => 1,
+        'DNS_Poisoning' => 2,
+        'Fraud_Orders' => 3,
+        'DDoS_Attack' => 4,
+        'FTP_Brute_Force' => 5,
+        'Ping_of_Death' => 6,
+        'Phishing' => 7,
+        'Fraud_VoIP' => 8,
+        'Open_Proxy' => 9,
+        'Web_Spam' => 10,
+        'Email_Spam' => 11,
+        'Blog_Spam' => 12,
+        'VPN_IP' => 13,
+        'Port_Scan' => 14,
+        'Hacking' => 15,
+        'SQL_Injection' => 16,
+        'Spoofing' => 17,
+        'Brute_Force' => 18,
+        'Bad_Web_Bot' => 19,
+        'Exploited_Host' => 20,
+        'Web_App_Attack' => 21,
+        'SSH' => 22,
+        'IoT_Targeted' => 23,
     ];
 
     /* function that all requests will be passed through */
@@ -36,19 +64,21 @@ class AbuseIPDBLaravel
 
         //check that accept type is application json, or plaintext for blacklist, if not throw error
         if ($acceptType != 'application/json') {
-            if($acceptType == 'text/plain' && $endpoint == 'blacklist'){
+            if ($acceptType == 'text/plain' && $endpoint == 'blacklist') {
                 //do nothing
+            } else {
+                throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
             }
-            else throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
+
         }
 
         //give the accept type to the headers array
         $this->headers['Accept'] = $acceptType;
 
         //get the api key from the env, if not present throw an error
-        if(env('ABUSEIPDB_API_KEY') != null){
+        if (env('ABUSEIPDB_API_KEY') != null) {
             $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
-        }else{
+        } else {
             throw new Exceptions\MissingAPIKeyException("ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.");
         }
 
@@ -73,14 +103,11 @@ class AbuseIPDBLaravel
             $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
             if ($status == 429) {
                 throw new Exceptions\TooManyRequestsException($message);
-            }
-            else if ($status == 402) {
+            } else if ($status == 402) {
                 throw new Exceptions\PaymentRequiredException($message);
-            }
-            else if ($status == 422) {
+            } else if ($status == 422) {
                 throw new Exceptions\UnprocessableContentException($message);
-            }
-            else {
+            } else {
                 //Error is not one of the conventional errors thrown by application
                 throw new Exceptions\UnconventionalErrorException($message);
             }
@@ -101,7 +128,7 @@ class AbuseIPDBLaravel
                 throw new Exceptions\InvalidParameterException("maxAgeInDays must be between 1 and 365.");
             }
         }
-    
+
         if ($verbose) {
             $parameters['verbose'] = $verbose;
         }
@@ -112,15 +139,14 @@ class AbuseIPDBLaravel
     }
 
     /* makes call to report endpoint of api */
-    public function report(string $ip, array|int $categories, string $comment = ''): ResponseObjects\ReportResponse
+    public function report(string $ip, array | int $categories, string $comment = ''): ResponseObjects\ReportResponse
     {
-        /* !in_array($cat, Categories::Types) */
-            foreach((array)$categories as $cat){
-                if ($cat > 30 || $cat < 1) {
-                    throw new Exceptions\InvalidParameterException("Individual category must be a valid category.");
-                }
-          }
-        
+
+        foreach ((array) $categories as $cat) {
+            if (!in_array($cat, $this->categories)) {
+                throw new Exceptions\InvalidParameterException("Individual category must be a valid category.");
+            }
+        }
 
         $parameters = ['ip' => $ip, 'categories' => $categories];
 

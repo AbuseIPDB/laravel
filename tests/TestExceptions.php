@@ -32,32 +32,14 @@ class TestExceptions extends TestCase {
         $this->expectException(Exceptions\TooManyRequestsException::class);
         //double reporting 127.0.0.1 within 15 minutes should not be allowed, will throw error
         AbuseIPDB::report('127.0.0.2', 21);
+        AbuseIPDB::report('127.0.0.2', 21);
+
     }   
         
     public function testUnprocessableContent(){
         $this->expectException(Exceptions\UnprocessableContentException::class);
         //category of 31 will throw an unprocessable error
-        AbuseIPDB::report('127.0.0.1', 31);
+        AbuseIPDB::makeRequest('report', ['ip'=>'127.0.0.1', 'categories'=>[21,31]]);
     }      
-
-
-    
-   /*  public function testMissingAPIKey(){
-        
-    } */  
-
-    /* Test will need to be rewritten */
-    /* public function testMissingParameter(){
-        $this->expectException(Exceptions\MissingParameterException::class);
-       
-    }    */
-
-    /* This test will need to be written */
-    /* public function testPaymentRequired(){
-        $this->expectException(Exceptions\PaymentRequiredException::class);
-        AbuseIPDB::makeRequest('check-block', ['network' => '127.0.0.1/16', 'maxAgeInDays' => 15]);
-    } */
-
-     
 }
 ?>

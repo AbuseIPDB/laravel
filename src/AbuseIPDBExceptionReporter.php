@@ -13,7 +13,6 @@ class AbuseIPDBExceptionReporter
     {
         //grab the ip address from the request, which is deemed suspicious by the exception being thrown
         $attackingAddress = request()->ip();
-
         /* Extract request body info to add to the report comment */
         $params = "";
         foreach (request()->all() as $param => $value) {

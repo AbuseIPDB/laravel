@@ -14,11 +14,12 @@
     },
     "authors": [
         {
-            "name": "Marathon Studios"
+            "name": "AbuseIPDB"
         }
     ],
 
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
+    "prefer-stable" : true,
     "extra": {
         "laravel": {
             "providers": [

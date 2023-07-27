@@ -8,14 +8,7 @@ use AbuseIPDB\ResponseObjects;
 
 class TestRequests extends TestCase
 {
-    public $testIPAddresses = [
-        '127.0.0.1',
-        '127.0.0.2',
-        '127.0.0.3',
-        '127.0.0.4',
-        '127.0.0.5',
-        '127.0.0.6',
-    ];
+
     public function testIlluminateResponseType()
     {
         $response = AbuseIPDB::makeRequest('check', ['ipAddress' => '127.0.0.1']);
@@ -26,7 +19,6 @@ class TestRequests extends TestCase
         $response = AbuseIPDB::check('127.0.0.1');
         $this->assertInstanceOf(ResponseObjects\CheckResponse::class, $response);
     }
-    
 
     public function testAbuseResponseProperties()
     {
@@ -74,18 +66,22 @@ class TestRequests extends TestCase
         $this->assertNotEmpty($response->countryName);
     }
 
-     public function testReportResponseType()
+    //array used to ensure that ipAddresses are not reused for different report endpoint tests
+    public $testIPAddresses = [
+        '127.0.0.2',
+        '127.0.0.3',
+    ];
+
+    public function testReportResponseType()
     {
-    $response = AbuseIPDB::report(end($this->testIPAddresses), 21);
-    array_pop($this->testIPAddresses);
-    $this->assertInstanceOf(ResponseObjects\ReportResponse::class,$response);
-    }  
+        $response = AbuseIPDB::report($this->testIPAddresses[0], 21);
+        $this->assertInstanceOf(ResponseObjects\ReportResponse::class, $response);
+    }
 
-     public function testReportResponseProperties(){
-        $response = AbuseIPDB::report(end($this->testIPAddresses), 21);
-
-        array_pop($this->testIPAddresses);
+    public function testReportResponseProperties()
+    {
+        $response = AbuseIPDB::report($this->testIPAddresses[1], 21);
         $this->assertObjectHasProperty('ipAddress', $response);
         $this->assertObjectHasProperty('abuseConfidenceScore', $response);
-    } 
+    }
 }
