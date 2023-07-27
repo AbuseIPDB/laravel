@@ -21,7 +21,7 @@ The main functions of the package are stored in the namespace `Abuseipdb\AbuseIP
 To use the facade, including the following in the file you wish to use it in: 
 
 ```php
-use AbuseipdbLaravel\Facades\AbuseIPDB;
+use AbuseIPDB\Facades\AbuseIPDB;
 ```
 Then the functions can be called statically:
 ```php
@@ -38,7 +38,7 @@ At the top of file:
 
 ```php
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
-use AbuseipdbLaravel\AbuseIPDBExceptionReporter;
+use AbuseIPDB\AbuseIPDBExceptionReporter;
 
 ```
 
@@ -150,7 +150,7 @@ All custom response objects extend a custom AbuseResponse class, which extracts 
 When handling responses that call an endpoint with custom responses, include the following at the top of file with requesting code: 
 
 ```php
-use AbuseipdbLaravel\ResponseObjects;
+use AbuseIPDB\ResponseObjects;
 ```
 Then those object types can be referenced as follows:
 
@@ -163,7 +163,7 @@ ResponseObjects\ReportResponse
 The AbuseResponse makes specific headers sent with a response from AbuseIPDB's API more accessible. The following properties are accessible from the object:
 
 ```php
-use AbuseipdbLaravel\ResposneObjects\AbuseResponse; 
+use AbuseIPDB\ResposneObjects\AbuseResponse; 
 $response = new AbuseResponse($httpResponse);
 
 $response -> x_ratelimit_limit
@@ -180,7 +180,7 @@ The CheckResponse object reflects the response data given from making a check re
 The following properties are included:
 
 ```php
-use AbuseipdbLaravel\ResponseObjects\CheckResponse; 
+use AbuseIPDB\ResponseObjects\CheckResponse; 
 $response = new CheckResponse($httpResponse);
 
 $response -> ipAddress;
@@ -208,7 +208,7 @@ The ReportResponse object reflects the response data given from making a report 
 The following properties are included:
 
 ```php
-use AbuseipdbLaravel\ResponseObjects\ReportResponse; 
+use AbuseIPDB\ResponseObjects\ReportResponse; 
 $response = new ReportResponse($httpResponse);
 
 $response -> $ipAddress;
@@ -231,7 +231,7 @@ UnprocessableContentException //422 error was thrown by API, indicating request 
 To handle these exceptions, use like the following:
 
 ```php
-    use AbuseipdbLaravel\Exceptions; 
+    use AbuseIPDB\Exceptions; 
 
     try {
         /* some code */
