@@ -2,6 +2,7 @@
     "name": "abuseipdb/laravel",
     "description": "Package to easily integrate the AbuseIPDB API with Laravel.",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "AbuseIPDB\\": "src/"
