@@ -1,10 +1,10 @@
 <?php 
 
-namespace AbuseipdbLaravel\Tests; 
+namespace AbuseIPDB\Tests; 
 
-use AbuseipdbLaravel\Tests\TestCase;
-use AbuseipdbLaravel\Exceptions;
-use AbuseipdbLaravel\Facades\AbuseIPDB;
+use AbuseIPDB\Tests\TestCase;
+use AbuseIPDB\Exceptions;
+use AbuseIPDB\Facades\AbuseIPDB;
 
 class TestExceptions extends TestCase {
 
@@ -31,8 +31,7 @@ class TestExceptions extends TestCase {
 
         $this->expectException(Exceptions\TooManyRequestsException::class);
         //double reporting 127.0.0.1 within 15 minutes should not be allowed, will throw error
-        AbuseIPDB::report('127.0.0.1', 21);
-        AbuseIPDB::report('127.0.0.1', 21);
+        AbuseIPDB::report('127.0.0.2', 21);
     }   
         
     public function testUnprocessableContent(){
@@ -42,7 +41,7 @@ class TestExceptions extends TestCase {
     }      
 
 
-    //not sure how to test this issue
+    
    /*  public function testMissingAPIKey(){
         
     } */  

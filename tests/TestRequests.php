@@ -1,13 +1,21 @@
 <?php
 
-namespace AbuseipdbLaravel\Tests;
+namespace AbuseIPDB\Tests;
 
-use AbuseipdbLaravel\Facades\AbuseIPDB;
-use AbuseipdbLaravel\Tests\TestCase;
+use AbuseIPDB\Facades\AbuseIPDB;
+use AbuseIPDB\Tests\TestCase;
+use AbuseIPDB\ResponseObjects;
 
 class TestRequests extends TestCase
 {
-
+    public $testIPAddresses = [
+        '127.0.0.1',
+        '127.0.0.2',
+        '127.0.0.3',
+        '127.0.0.4',
+        '127.0.0.5',
+        '127.0.0.6',
+    ];
     public function testIlluminateResponseType()
     {
         $response = AbuseIPDB::makeRequest('check', ['ipAddress' => '127.0.0.1']);
@@ -51,8 +59,6 @@ class TestRequests extends TestCase
 
     }
 
-    
-
     public function testCheckResponseWithoutVerbose()
     {
         $response = AbuseIPDB::check('154.198.211.170');
@@ -68,16 +74,18 @@ class TestRequests extends TestCase
         $this->assertNotEmpty($response->countryName);
     }
 
-    /* test for report endpoint are commented out since they cannot be run more than once every 15 minutes*/
-    /* public function testReportResponseType()
+     public function testReportResponseType()
     {
-    $response = AbuseIPDB::report('127.0.0.2', 21);
+    $response = AbuseIPDB::report(end($this->testIPAddresses), 21);
+    array_pop($this->testIPAddresses);
     $this->assertInstanceOf(ResponseObjects\ReportResponse::class,$response);
-    }  */
+    }  
 
-    /* public function testReportResponseProperties(){
-        $response = AbuseIPDB::report('127.0.0.1', 21);
+     public function testReportResponseProperties(){
+        $response = AbuseIPDB::report(end($this->testIPAddresses), 21);
+
+        array_pop($this->testIPAddresses);
         $this->assertObjectHasProperty('ipAddress', $response);
         $this->assertObjectHasProperty('abuseConfidenceScore', $response);
-    } */
+    } 
 }

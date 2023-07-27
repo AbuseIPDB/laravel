@@ -1,7 +1,5 @@
 <?php
-namespace AbuseipdbLaravel\Tests;
-
-use Mockery;
+namespace AbuseIPDB\Tests;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -10,14 +8,14 @@ class TestCase extends \Orchestra\Testbench\TestCase
     //register packages to the test class
     protected function getPackageProviders($app){
         return [
-            'AbuseipdbLaravel\Providers\AbuseIPDBLaravelServiceProvider',
+            'AbuseIPDB\Providers\AbuseIPDBLaravelServiceProvider',
         ];
     }
 
     //register aliases to the test classes
     protected function getPackageAliases($app){
         return [
-            'AbuseIPDB' => 'AbuseipdbLaravel\Facades\AbuseIPDB',
+            'AbuseIPDB' => 'AbuseIPDB\Facades\AbuseIPDB',
         ];
     }
 

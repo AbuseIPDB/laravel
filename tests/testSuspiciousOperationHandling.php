@@ -1,11 +1,11 @@
 <?php 
 
-namespace AbuseipdbLaravel\Tests; 
+namespace AbuseIPDB\Tests; 
 
-use AbuseipdbLaravel\Tests\TestCase;
-use AbuseipdbLaravel\Exceptions;
-use AbuseipdbLaravel\Facades\AbuseIPDB;
-use AbuseipdbLaravel\AbuseIPDBExceptionReporter;
+use AbuseIPDB\Tests\TestCase;
+use AbuseIPDB\Exceptions;
+use AbuseIPDB\Facades\AbuseIPDB;
+use AbuseIPDB\AbuseIPDBExceptionReporter;
 
 class TestSuspiciousOperationHandling extends TestCase {
 
@@ -14,6 +14,5 @@ class TestSuspiciousOperationHandling extends TestCase {
         //check that the response went through
         $response = AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
         $this -> assertNotEmpty($response);
-
     }
 }

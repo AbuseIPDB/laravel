@@ -1,5 +1,5 @@
 <?php
-namespace AbuseipdbLaravel\ResponseObjects;
+namespace AbuseIPDB\ResponseObjects;
 
 use Illuminate\Http\Client\Response as HttpResponse;
 

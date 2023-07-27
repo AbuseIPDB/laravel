@@ -1,8 +1,8 @@
 <?php
- namespace AbuseipdbLaravel\Facades;
+ namespace AbuseIPDB\Facades;
 
  use Illuminate\Support\Facades\Facade;
- use AbuseipdbLaravel\AbuseIPDBLaravel;
+ use AbuseIPDB\AbuseIPDBLaravel;
 
  class AbuseIPDB extends Facade{
 

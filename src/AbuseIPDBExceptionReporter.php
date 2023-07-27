@@ -1,10 +1,10 @@
 <?php
 
-namespace AbuseipdbLaravel;
+namespace AbuseIPDB;
 
-use AbuseipdbLaravel\Exceptions\TooManyRequestsException;
-use AbuseipdbLaravel\ResponseObjects;
-use AbuseipdbLaravel\Facades\AbuseIPDB;
+use AbuseIPDB\Exceptions\TooManyRequestsException;
+use AbuseIPDB\ResponseObjects;
+use AbuseIPDB\Facades\AbuseIPDB;
 
 class AbuseIPDBExceptionReporter
 {

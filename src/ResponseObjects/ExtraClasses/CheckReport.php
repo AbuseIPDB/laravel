@@ -1,5 +1,5 @@
 <?php 
-namespace AbuseipdbLaravel\ResponseObjects\ExtraClasses;
+namespace AbuseIPDB\ResponseObjects\ExtraClasses;
 
 class CheckReport {
     

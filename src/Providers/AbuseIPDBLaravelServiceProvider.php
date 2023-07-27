@@ -1,9 +1,9 @@
 <?php 
 
-namespace AbuseipdbLaravel\Providers;
+namespace AbuseIPDB\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use AbuseipdbLaravel\AbuseIPDBLaravel;
+use AbuseIPDB\AbuseIPDBLaravel;
 
 class AbuseIPDBLaravelServiceProvider extends ServiceProvider{
 

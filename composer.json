@@ -4,12 +4,12 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "AbuseipdbLaravel\\": "src/"
+            "AbuseIPDB\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AbuseipdbLaravel\\Tests\\": "tests"
+            "AbuseIPDB\\Tests\\": "tests"
         }
     },
     "authors": [
@@ -22,18 +22,18 @@
     "extra": {
         "laravel": {
             "providers": [
-                "AbuseipdbLaravel\\Providers\\AbuseIPDBLaravelServiceProvider"
+                "AbuseIPDB\\Providers\\AbuseIPDBLaravelServiceProvider"
             ],
             "aliases": {
-                "AbuseIPDB": "AbuseipdbLaravel\\Facades\\AbuseIPDB"
+                "AbuseIPDB": "AbuseIPDB\\Facades\\AbuseIPDB"
             }
         }
     },
     "require-dev": {
-        "orchestra/testbench": "dev-develop",
-        "mockery/mockery": "1.6.x-dev"
+        "orchestra/testbench": "dev-develop"
     },
     "require": {
-        "laravel/framework": "^10.0"
+        "laravel/framework": "^10.0",
+        "guzzlehttp/guzzle": "^7.5"
     }
 }

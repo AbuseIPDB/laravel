@@ -1,6 +1,6 @@
 <?php
 
-namespace AbuseipdbLaravel\Exceptions;
+namespace AbuseIPDB\Exceptions;
 
 use Exception; 
 

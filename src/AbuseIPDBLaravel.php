@@ -1,6 +1,6 @@
 <?php
 
-namespace AbuseipdbLaravel;
+namespace AbuseIPDB;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -90,57 +90,42 @@ class AbuseIPDBLaravel
     }
 
     /* makes call to the check endpoint of api */
-    public function check($ipAddress, $maxAgeInDays = null, $verbose = null): ResponseObjects\CheckResponse
+    public function check(string $ipAddress, int $maxAgeInDays = 30, bool $verbose = false): ResponseObjects\CheckResponse
     {
-        //throw an error if ipAddress is not present
-        if (!isset($ipAddress)) {
-            throw new Exceptions\MissingParameterException("ipAddress must be sent with check request.");
-        }
-        $parameters = ['ipAddress' => $ipAddress];
-
+        $parameters['ipAddress'] = $ipAddress;
         //only send nullable parameters if present
-        if (isset($maxAgeInDays)) {
+        if ($maxAgeInDays) {
             if ($maxAgeInDays >= 1 && $maxAgeInDays <= 365) {
                 $parameters['maxAgeInDays'] = $maxAgeInDays;
             } else {
                 throw new Exceptions\InvalidParameterException("maxAgeInDays must be between 1 and 365.");
             }
-
         }
-        if (isset($verbose)) {$parameters['verbose'] = $verbose;}
+    
+        if ($verbose) {
+            $parameters['verbose'] = $verbose;
+        }
 
         $httpResponse = $this->makeRequest('check', $parameters);
 
         return new ResponseObjects\CheckResponse($httpResponse);
-
     }
 
     /* makes call to report endpoint of api */
-    public function report($ip, $categories, $comment = null): ResponseObjects\ReportResponse
+    public function report(string $ip, array|int $categories, string $comment = ''): ResponseObjects\ReportResponse
     {
-
-        if (!isset($ip)) {
-            throw new Exceptions\MissingParameterException("ip must be sent with report request.");
-        }
-        if (!isset($categories)) {
-            throw new Exceptions\MissingParameterException("categories must be sent with check request.");
-        }
-        if(is_array($categories)){
-            foreach($categories as $cat){
-                if(!is_numeric($categories) || $categories > 30 || $categories < 1){
-                    throw new Exceptions\InvalidParameterException("Individual category must be a number between 1 and 30");
+        /* !in_array($cat, Categories::Types) */
+            foreach((array)$categories as $cat){
+                if ($cat > 30 || $cat < 1) {
+                    throw new Exceptions\InvalidParameterException("Individual category must be a valid category.");
                 }
-            }
-        }else{
-            if(!is_numeric($categories) || $categories > 30 || $categories < 1){
-                throw new Exceptions\InvalidParameterException("Individual category must be a number between 1 and 30");
-            }
-        }
+          }
+        
 
         $parameters = ['ip' => $ip, 'categories' => $categories];
 
         //only send nullable parameters if present
-        if (isset($comment)) {
+        if ($comment) {
             $parameters['comment'] = $comment;
         }
 

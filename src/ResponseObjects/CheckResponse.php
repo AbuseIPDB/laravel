@@ -1,10 +1,10 @@
 <?php
 
-namespace AbuseipdbLaravel\ResponseObjects;
+namespace AbuseIPDB\ResponseObjects;
 
-use AbuseipdbLaravel\ResponseObjects\AbuseResponse;
+use AbuseIPDB\ResponseObjects\AbuseResponse;
 use Illuminate\Http\Client\Response as HttpResponse;
-use AbuseipdbLaravel\ResponseObjects\ExtraClasses\CheckReport;
+use AbuseIPDB\ResponseObjects\ExtraClasses\CheckReport;
 
 class CheckResponse extends AbuseResponse
 {
