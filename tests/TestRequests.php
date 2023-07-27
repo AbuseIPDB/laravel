@@ -68,8 +68,8 @@ class TestRequests extends TestCase
 
     //array used to ensure that ipAddresses are not reused for different report endpoint tests
     public $testIPAddresses = [
-        '127.0.0.2',
-        '127.0.0.3',
+        '127.0.0.4',
+        '127.0.0.5',
     ];
 
     public function testReportResponseType()

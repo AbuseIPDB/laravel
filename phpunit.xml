@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit>
 	<php>
-        <env name="ABUSEIPDB_API_KEY" value="2f29852e9012bd8d479574c52f5ace16ede748085082c8c87fbcb154fcda7e34f038a92523ce9a06"/>
+        <env name="ABUSEIPDB_API_KEY" value="e1083a140d3a0b04e81acf14a2d1c752894f3b8cd97bb2fb4795b82bc63f9c2ebe5298a872636130"/>
         <env name="APP_ENV" value="local"/>
 	</php>
 	<testsuites>
