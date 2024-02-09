@@ -3,7 +3,6 @@
 namespace AbuseIPDB\Tests;
 
 use AbuseIPDB\Facades\AbuseIPDB;
-use AbuseIPDB\Tests\TestCase;
 use AbuseIPDB\ResponseObjects;
 
 class TestRequests extends TestCase
@@ -83,5 +82,21 @@ class TestRequests extends TestCase
         $response = AbuseIPDB::report($this->testIPAddresses[1], 21);
         $this->assertObjectHasProperty('ipAddress', $response);
         $this->assertObjectHasProperty('abuseConfidenceScore', $response);
+    }
+
+    public function testReportsPaginatedResponseType(): void
+    {
+        $response = AbuseIPDB::reports('127.0.0.1');
+        $this->assertInstanceOf(ResponseObjects\ReportsPaginatedResponse::class, $response);
+    }
+
+    public function testReportsPaginatedResultsType(): void
+    {
+        $response = AbuseIPDB::reports('127.0.0.1');
+
+        $this->assertContainsOnlyInstancesOf(
+            ResponseObjects\ExtraClasses\ResultReports::class,
+            $response->results
+        );
     }
 }
