@@ -48,7 +48,6 @@ class TestRequests extends TestCase
         $this->assertObjectHasProperty('lastReportedAt', $response);
         $this->assertObjectHasProperty('countryName', $response);
         $this->assertObjectHasProperty('reports', $response);
-
     }
 
     public function testCheckResponseWithoutVerbose()

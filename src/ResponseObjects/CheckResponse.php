@@ -76,6 +76,5 @@ class CheckResponse extends AbuseResponse
                 array_push($this->reports, new CheckReport($report));
             }
         }
-
     }
 }

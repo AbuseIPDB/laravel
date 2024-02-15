@@ -13,7 +13,6 @@ class ReportResponse extends AbuseResponse
 
     public function __construct(HttpResponse $httpResponse)
     {
-
         //construct instance of the parent
         parent::__construct($httpResponse);
 

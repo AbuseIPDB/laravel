@@ -21,7 +21,6 @@ class AbuseResponse extends HttpResponse
 
     public function __construct(HttpResponse $httpResponse)
     {
-
         parent::__construct($httpResponse);
 
         /* grabbing and assigning headers directly from the request */

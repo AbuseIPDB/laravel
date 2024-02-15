@@ -19,7 +19,6 @@ class CheckReport
 
     public function __construct($report)
     {
-
         /* assign properties from a response's report and places it into object */
         $this->reportedAt = $report->reportedAt;
         $this->comment = $report->comment;
@@ -27,6 +26,5 @@ class CheckReport
         $this->reporterId = $report->reporterId;
         $this->reporterCountryCode = $report->reporterCountryCode;
         $this->reporterCountryName = $report->reporterCountryName;
-
     }
 }

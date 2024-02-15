@@ -30,7 +30,6 @@ class TestExceptions extends TestCase
 
     public function testTooManyRequests()
     {
-
         $this->expectException(Exceptions\TooManyRequestsException::class);
         //double reporting 127.0.0.1 within 15 minutes should not be allowed, will throw error
         AbuseIPDB::report('127.0.0.2', 21);

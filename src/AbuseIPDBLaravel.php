@@ -53,7 +53,6 @@ class AbuseIPDBLaravel
     /* function that all requests will be passed through */
     public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
-
         //check that endpoint passed in exists for the api
         if (! array_key_exists($endpointName, $this->endpoints)) {
             throw new Exceptions\InvalidEndpointException('Endpoint name given is invalid.');
@@ -111,7 +110,6 @@ class AbuseIPDBLaravel
                 //Error is not one of the conventional errors thrown by application
                 throw new Exceptions\UnconventionalErrorException($message);
             }
-
         }
 
         return null;
@@ -142,7 +140,6 @@ class AbuseIPDBLaravel
     /* makes call to report endpoint of api */
     public function report(string $ip, array|int $categories, string $comment = ''): ResponseObjects\ReportResponse
     {
-
         foreach ((array) $categories as $cat) {
             if (! in_array($cat, $this->categories)) {
                 throw new Exceptions\InvalidParameterException('Individual category must be a valid category.');
