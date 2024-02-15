@@ -3,17 +3,16 @@
 namespace AbuseIPDB\Tests;
 
 use AbuseIPDB\Facades\AbuseIPDB;
-use AbuseIPDB\Tests\TestCase;
 use AbuseIPDB\ResponseObjects;
 
 class TestRequests extends TestCase
 {
-
     public function testIlluminateResponseType()
     {
         $response = AbuseIPDB::makeRequest('check', ['ipAddress' => '127.0.0.1']);
         $this->assertInstanceOf(\Illuminate\Http\Client\Response::class, $response);
     }
+
     public function testCheckResponseType()
     {
         $response = AbuseIPDB::check('127.0.0.1');
@@ -29,6 +28,7 @@ class TestRequests extends TestCase
         $this->assertObjecthasProperty('cache_control', $response);
         $this->assertObjecthasProperty('cf_cache_status', $response);
     }
+
     public function testCheckResponseProperties()
     {
         $response = AbuseIPDB::check('127.0.0.1');
@@ -58,7 +58,7 @@ class TestRequests extends TestCase
         $this->assertEmpty($response->countryName);
     }
 
-//testing with real ip, testing with 127.0.0.1 will not have a countryName
+    //testing with real ip, testing with 127.0.0.1 will not have a countryName
     public function testCheckResponseWithVerbose()
     {
         $response = AbuseIPDB::check('154.198.211.170', verbose: 1);

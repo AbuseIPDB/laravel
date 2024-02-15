@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class UnconventionalErrorException extends Exception{
-
+class UnconventionalErrorException extends Exception
+{
 }
-
-?>

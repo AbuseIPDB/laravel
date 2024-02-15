@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class TooManyRequestsException extends Exception{
-
+class TooManyRequestsException extends Exception
+{
 }
-
-?>

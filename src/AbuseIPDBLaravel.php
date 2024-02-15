@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Http;
 
 class AbuseIPDBLaravel
 {
-
     private $api_url = 'https://api.abuseipdb.com/api/v2/'; //base url for api, used for all requests
+
     private $headers = []; // array used to store the headers
 
     /* array of all endpoints available by the api, and their respective HTTP request verbs */
@@ -55,8 +55,8 @@ class AbuseIPDBLaravel
     {
 
         //check that endpoint passed in exists for the api
-        if (!array_key_exists($endpointName, $this->endpoints)) {
-            throw new Exceptions\InvalidEndpointException("Endpoint name given is invalid.");
+        if (! array_key_exists($endpointName, $this->endpoints)) {
+            throw new Exceptions\InvalidEndpointException('Endpoint name given is invalid.');
         }
 
         //grab the proper request method from the endpoints array
@@ -67,7 +67,7 @@ class AbuseIPDBLaravel
             if ($acceptType == 'text/plain' && $endpoint == 'blacklist') {
                 //do nothing
             } else {
-                throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
+                throw new Exceptions\InvalidAcceptTypeException('Accept Type given may not be used.');
             }
 
         }
@@ -79,7 +79,7 @@ class AbuseIPDBLaravel
         if (env('ABUSEIPDB_API_KEY') != null) {
             $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
         } else {
-            throw new Exceptions\MissingAPIKeyException("ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.");
+            throw new Exceptions\MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
         }
 
         //create client and assign headers array
@@ -91,7 +91,7 @@ class AbuseIPDBLaravel
         }
 
         //make the request to the api
-        $response = $client->$requestMethod($this->api_url . $endpointName, $parameters);
+        $response = $client->$requestMethod($this->api_url.$endpointName, $parameters);
 
         //extract the status code
         $status = $response->status();
@@ -100,12 +100,12 @@ class AbuseIPDBLaravel
             return $response;
         } else {
             //check for different possible error codes
-            $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
+            $message = 'AbuseIPDB: '.$response->object()->errors[0]->detail;
             if ($status == 429) {
                 throw new Exceptions\TooManyRequestsException($message);
-            } else if ($status == 402) {
+            } elseif ($status == 402) {
                 throw new Exceptions\PaymentRequiredException($message);
-            } else if ($status == 422) {
+            } elseif ($status == 422) {
                 throw new Exceptions\UnprocessableContentException($message);
             } else {
                 //Error is not one of the conventional errors thrown by application
@@ -113,6 +113,7 @@ class AbuseIPDBLaravel
             }
 
         }
+
         return null;
     }
 
@@ -125,7 +126,7 @@ class AbuseIPDBLaravel
             if ($maxAgeInDays >= 1 && $maxAgeInDays <= 365) {
                 $parameters['maxAgeInDays'] = $maxAgeInDays;
             } else {
-                throw new Exceptions\InvalidParameterException("maxAgeInDays must be between 1 and 365.");
+                throw new Exceptions\InvalidParameterException('maxAgeInDays must be between 1 and 365.');
             }
         }
 
@@ -139,12 +140,12 @@ class AbuseIPDBLaravel
     }
 
     /* makes call to report endpoint of api */
-    public function report(string $ip, array | int $categories, string $comment = ''): ResponseObjects\ReportResponse
+    public function report(string $ip, array|int $categories, string $comment = ''): ResponseObjects\ReportResponse
     {
 
         foreach ((array) $categories as $cat) {
-            if (!in_array($cat, $this->categories)) {
-                throw new Exceptions\InvalidParameterException("Individual category must be a valid category.");
+            if (! in_array($cat, $this->categories)) {
+                throw new Exceptions\InvalidParameterException('Individual category must be a valid category.');
             }
         }
 
@@ -159,5 +160,4 @@ class AbuseIPDBLaravel
 
         return new ResponseObjects\ReportResponse($httpResponse);
     }
-
 }

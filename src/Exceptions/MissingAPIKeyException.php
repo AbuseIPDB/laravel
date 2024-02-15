@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class MissingAPIKeyException extends Exception{
-
+class MissingAPIKeyException extends Exception
+{
 }
-
-?>

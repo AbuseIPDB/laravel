@@ -1,13 +1,14 @@
 <?php
- namespace AbuseIPDB\Facades;
 
- use Illuminate\Support\Facades\Facade;
- use AbuseIPDB\AbuseIPDBLaravel;
+namespace AbuseIPDB\Facades;
 
- class AbuseIPDB extends Facade{
+use AbuseIPDB\AbuseIPDBLaravel;
+use Illuminate\Support\Facades\Facade;
 
-    protected static function getFacadeAccessor(){
+class AbuseIPDB extends Facade
+{
+    protected static function getFacadeAccessor()
+    {
         return AbuseIPDBLaravel::class;
     }
- }
-?>
+}

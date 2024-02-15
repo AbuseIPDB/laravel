@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class InvalidAcceptTypeException extends Exception{
-
+class InvalidAcceptTypeException extends Exception
+{
 }
-
-?>
