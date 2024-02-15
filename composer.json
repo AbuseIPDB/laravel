@@ -32,7 +32,8 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "dev-develop"
+        "orchestra/testbench": "^8.0",
+        "laravel/pint": "^1.13"
     },
     "require": {
         "laravel/framework": "^10.0",
