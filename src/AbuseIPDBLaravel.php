@@ -53,7 +53,6 @@ class AbuseIPDBLaravel
     /* function that all requests will be passed through */
     public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
-
         //check that endpoint passed in exists for the api
         if (!array_key_exists($endpointName, $this->endpoints)) {
             throw new Exceptions\InvalidEndpointException("Endpoint name given is invalid.");
@@ -76,8 +75,8 @@ class AbuseIPDBLaravel
         $this->headers['Accept'] = $acceptType;
 
         //get the api key from the env, if not present throw an error
-        if (env('ABUSEIPDB_API_KEY') != null) {
-            $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
+        if (config('abuseipdb.api_key') != null) {
+            $this->headers['Key'] = config('abuseipdb.api_key');
         } else {
             throw new Exceptions\MissingAPIKeyException("ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.");
         }
