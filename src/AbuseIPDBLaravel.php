@@ -86,7 +86,7 @@ class AbuseIPDBLaravel
         $client = Http::withHeaders($this->headers);
 
         //verify false here for local development purposes, to avoid certificate issues
-        if (env('APP_ENV') == 'local') {
+        if (app()->islocal()) {
             $client->withOptions(['verify' => false]);
         }
 
