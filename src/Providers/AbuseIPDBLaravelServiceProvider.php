@@ -11,10 +11,11 @@ class AbuseIPDBLaravelServiceProvider extends ServiceProvider{
 
     }
 
-    public function register(){
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../../config/abuseipdb.php', 'abuseipdb');
 
         $this->app->singleton(AbuseIPDBLaravel::class);
-        
     }
 
     public function provides(){
