@@ -91,21 +91,22 @@ class AbuseIPDBLaravel
         }
 
         //make the request to the api
+        /** @var Response $response */
         $response = $client->$requestMethod($this->api_url . $endpointName, $parameters);
 
         //extract the status code
         $status = $response->status();
 
-        if ($status == 200) {
+        if ($status === 200) {
             return $response;
         } else {
             //check for different possible error codes
             $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
-            if ($status == 429) {
+            if ($status === 429) {
                 throw new Exceptions\TooManyRequestsException($message);
-            } else if ($status == 402) {
+            } else if ($status === 402) {
                 throw new Exceptions\PaymentRequiredException($message);
-            } else if ($status == 422) {
+            } else if ($status === 422) {
                 throw new Exceptions\UnprocessableContentException($message);
             } else {
                 //Error is not one of the conventional errors thrown by application
