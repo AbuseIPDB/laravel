@@ -1,13 +1,22 @@
 <?php
- namespace AbuseIPDB\Facades;
 
- use Illuminate\Support\Facades\Facade;
- use AbuseIPDB\AbuseIPDBLaravel;
+namespace AbuseIPDB\Facades;
 
- class AbuseIPDB extends Facade{
+use AbuseIPDB\ResponseObjects\CheckResponse;
+use AbuseIPDB\ResponseObjects\ReportResponse;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Facade;
+use AbuseIPDB\AbuseIPDBLaravel;
 
-    protected static function getFacadeAccessor(){
+/**
+ * @method static Response|null makeRequest($endpointName, $parameters, $acceptType = 'application/json')
+ * @method static CheckResponse check(string $ipAddress, int $maxAgeInDays = 30, bool $verbose = false)
+ * @method static ReportResponse report(string $ip, array|int $categories, string $comment = '')
+ */
+class AbuseIPDB extends Facade
+{
+    protected static function getFacadeAccessor()
+    {
         return AbuseIPDBLaravel::class;
     }
- }
-?>
+}
