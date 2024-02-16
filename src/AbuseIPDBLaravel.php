@@ -99,22 +99,21 @@ class AbuseIPDBLaravel
 
         if ($status === 200) {
             return $response;
-        } else {
-            //check for different possible error codes
-            $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
-            if ($status === 429) {
-                throw new Exceptions\TooManyRequestsException($message);
-            } else if ($status === 402) {
-                throw new Exceptions\PaymentRequiredException($message);
-            } else if ($status === 422) {
-                throw new Exceptions\UnprocessableContentException($message);
-            } else {
-                //Error is not one of the conventional errors thrown by application
-                throw new Exceptions\UnconventionalErrorException($message);
-            }
-
         }
-        return null;
+
+        //check for different possible error codes
+        $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
+
+        if ($status === 429) {
+            throw new Exceptions\TooManyRequestsException($message);
+        } else if ($status === 402) {
+            throw new Exceptions\PaymentRequiredException($message);
+        } else if ($status === 422) {
+            throw new Exceptions\UnprocessableContentException($message);
+        } else {
+            //Error is not one of the conventional errors thrown by application
+            throw new Exceptions\UnconventionalErrorException($message);
+        }
     }
 
     /* makes call to the check endpoint of api */
