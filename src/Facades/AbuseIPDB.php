@@ -2,12 +2,11 @@
 
 namespace AbuseIPDB\Facades;
 
-
+use AbuseIPDB\AbuseIPDBLaravel;
 use AbuseIPDB\ResponseObjects\CheckResponse;
 use AbuseIPDB\ResponseObjects\ReportResponse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
-use AbuseIPDB\AbuseIPDBLaravel;
 
 /**
  * @method static Response|null makeRequest($endpointName, $parameters, $acceptType = 'application/json')

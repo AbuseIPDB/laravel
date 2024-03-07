@@ -4,12 +4,12 @@ namespace AbuseIPDB;
 
 use AbuseIPDB\Exceptions\InvalidAcceptTypeException;
 use AbuseIPDB\Exceptions\InvalidEndpointException;
+use AbuseIPDB\Exceptions\InvalidParameterException;
 use AbuseIPDB\Exceptions\MissingAPIKeyException;
 use AbuseIPDB\Exceptions\PaymentRequiredException;
 use AbuseIPDB\Exceptions\TooManyRequestsException;
 use AbuseIPDB\Exceptions\UnconventionalErrorException;
 use AbuseIPDB\Exceptions\UnprocessableContentException;
-use AbuseIPDB\Exceptions\InvalidParameterException;
 use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -18,15 +18,13 @@ class AbuseIPDBLaravel
 {
     /**
      * The AbuseIPDB API base url
-     *
-     * @var string $baseUrl
      */
     private string $baseUrl = 'https://api.abuseipdb.com/api/v2/';
 
     /**
      * The request headers
      *
-     * @var string[] $headers
+     * @var string[]
      */
     private array $headers = [];
 
@@ -127,7 +125,7 @@ class AbuseIPDBLaravel
 
         //make the request to the api
         /** @var Response $response */
-        $response = $client->$requestMethod($this->baseUrl . $endpointName, $parameters);
+        $response = $client->$requestMethod($this->baseUrl.$endpointName, $parameters);
 
         //extract the status code
         $status = $response->status();
@@ -137,7 +135,7 @@ class AbuseIPDBLaravel
         }
 
         //check for different possible error codes
-        $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
+        $message = 'AbuseIPDB: '.$response->object()->errors[0]->detail;
 
         match ($status) {
             429 => throw new Exceptions\TooManyRequestsException($message),
@@ -193,11 +191,6 @@ class AbuseIPDBLaravel
     /**
      * Get the reports for a single IP address (v4 or v6)
      *
-     * @param string $ipAddress
-     * @param int $maxAgeInDays
-     * @param int $page
-     * @param int $perPage
-     * @return \AbuseIPDB\ResponseObjects\ReportsPaginatedResponse
      * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
     public function reports(string $ipAddress, int $maxAgeInDays = 30, int $page = 1, int $perPage = 25): ReportsPaginatedResponse
@@ -223,5 +216,4 @@ class AbuseIPDBLaravel
 
         return new ReportsPaginatedResponse($response);
     }
-
 }

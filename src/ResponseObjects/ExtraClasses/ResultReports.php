@@ -5,10 +5,15 @@ namespace AbuseIPDB\ResponseObjects\ExtraClasses;
 class ResultReports
 {
     public string $reportedAt;
+
     public string $comment;
+
     public array $categories;
+
     public int $reporterId;
+
     public string $reporterCountryCode;
+
     public string $reporterCountryName;
 
     public function __construct(array $result)

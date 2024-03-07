@@ -8,11 +8,17 @@ use Illuminate\Http\Client\Response;
 class ReportsPaginatedResponse extends AbuseResponse
 {
     public int $total;
+
     public int $page;
+
     public int $count;
+
     public int $perPage;
+
     public int $lastPage;
+
     public string $nextPageUrl;
+
     public ?string $previousPageUrl;
 
     /**
@@ -34,7 +40,7 @@ class ReportsPaginatedResponse extends AbuseResponse
         $this->previousPageUrl = $responseData['previousPageUrl'];
 
         $this->results = array_map(
-            fn($result) => new ResultReports($result),
+            fn ($result) => new ResultReports($result),
             $responseData['results']
         );
     }
