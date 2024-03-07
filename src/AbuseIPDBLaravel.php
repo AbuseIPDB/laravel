@@ -2,6 +2,13 @@
 
 namespace AbuseIPDB;
 
+use AbuseIPDB\Exceptions\InvalidAcceptTypeException;
+use AbuseIPDB\Exceptions\InvalidEndpointException;
+use AbuseIPDB\Exceptions\MissingAPIKeyException;
+use AbuseIPDB\Exceptions\PaymentRequiredException;
+use AbuseIPDB\Exceptions\TooManyRequestsException;
+use AbuseIPDB\Exceptions\UnconventionalErrorException;
+use AbuseIPDB\Exceptions\UnprocessableContentException;
 use AbuseIPDB\Exceptions\InvalidParameterException;
 use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
 use Illuminate\Http\Client\Response;
@@ -69,7 +76,17 @@ class AbuseIPDBLaravel
         'IoT_Targeted' => 23,
     ];
 
-    /* function that all requests will be passed through */
+    /**
+     * Function that all requests will be passed through.
+     *
+     * @throws InvalidEndpointException
+     * @throws UnprocessableContentException
+     * @throws TooManyRequestsException
+     * @throws PaymentRequiredException
+     * @throws InvalidAcceptTypeException
+     * @throws MissingAPIKeyException
+     * @throws UnconventionalErrorException
+     */
     public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
         //check that endpoint passed in exists for the api
@@ -109,29 +126,25 @@ class AbuseIPDBLaravel
         }
 
         //make the request to the api
+        /** @var Response $response */
         $response = $client->$requestMethod($this->baseUrl . $endpointName, $parameters);
 
         //extract the status code
         $status = $response->status();
 
-        if ($status == 200) {
+        if ($status === 200) {
             return $response;
-        } else {
-            //check for different possible error codes
-            $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
-            if ($status == 429) {
-                throw new Exceptions\TooManyRequestsException($message);
-            } else if ($status == 402) {
-                throw new Exceptions\PaymentRequiredException($message);
-            } else if ($status == 422) {
-                throw new Exceptions\UnprocessableContentException($message);
-            } else {
-                //Error is not one of the conventional errors thrown by application
-                throw new Exceptions\UnconventionalErrorException($message);
-            }
-
         }
-        return null;
+
+        //check for different possible error codes
+        $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
+
+        match ($status) {
+            429 => throw new Exceptions\TooManyRequestsException($message),
+            402 => throw new Exceptions\PaymentRequiredException($message),
+            422 => throw new Exceptions\UnprocessableContentException($message),
+            default => throw new Exceptions\UnconventionalErrorException($message),
+        };
     }
 
     /* makes call to the check endpoint of api */
