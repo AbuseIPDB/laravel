@@ -148,6 +148,26 @@ public function report($ip, $categories, $comment = null): ResponseObjects\Repor
 
 Returns a `ResponseObjects\ReportResponse` object. Please refer to documentation below regarding this object.
 
+### reports() method
+
+The `reports()` method makes a request to the reports endpoint of the AbuseIPDB API. Its signature is as follows:
+```php
+public function reports(string $ipAddress, int $maxAgeInDays = 30, int $page = 1, int $perPage = 25): ReportsPaginatedResponse
+```
+#### Parameters
+
+`ipAddress`: The IP address to get reports for
+
+`maxAgeInDays`: Optional: Age of reports used to check the IP address. Must be between 1 and 365 if set, the default is 30.
+
+`page`: Optional: Current page of pagination. Must be at least 1, the default is 1.
+
+`perPage`: Optional: Quantity of results per page. Must be between 1 and 100, the default is 25.
+
+#### Return Type
+
+Returns a `ResponseObjects\ReportResponse` object. Please refer to documentation below regarding this object.
+
 ### Response Objects
 All custom response objects extend a custom AbuseResponse class, which extracts certain headers from the response and makes them accessible. 
 
@@ -162,6 +182,7 @@ Then those object types can be referenced as follows:
 ResponseObjects\AbuseResponse
 ResponseObjects\CheckResponse
 ResponseObjects\ReportResponse
+ResponseObjects\ReportsPaginatedResponse
 ```
 #### AbuseResponse
 The AbuseResponse makes specific headers sent with a response from AbuseIPDB's API more accessible. The following properties are accessible from the object:
@@ -217,6 +238,21 @@ $response = new ReportResponse($httpResponse);
 
 $response -> $ipAddress;
 $response -> $abuseConfidenceScore; 
+```
+
+#### ReportsPaginatedResponse
+
+```php
+use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
+
+$response = new ReportsPaginatedResponse($httpResponse);
+
+$response->total;
+$response->page;
+$response->perPage;
+$response->lastPage;
+$response->nextPageUrl;
+$response->previousPageUrl;
 ```
 
 ## Exceptions

@@ -2,19 +2,40 @@
 
 namespace AbuseIPDB;
 
+use AbuseIPDB\Exceptions\InvalidAcceptTypeException;
+use AbuseIPDB\Exceptions\InvalidEndpointException;
+use AbuseIPDB\Exceptions\MissingAPIKeyException;
+use AbuseIPDB\Exceptions\PaymentRequiredException;
+use AbuseIPDB\Exceptions\TooManyRequestsException;
+use AbuseIPDB\Exceptions\UnconventionalErrorException;
+use AbuseIPDB\Exceptions\UnprocessableContentException;
+use AbuseIPDB\Exceptions\InvalidParameterException;
+use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
-//require_once('./AbuseCategory.php');
-
 class AbuseIPDBLaravel
 {
-    private $api_url = 'https://api.abuseipdb.com/api/v2/'; //base url for api, used for all requests
+    /**
+     * The AbuseIPDB API base url
+     *
+     * @var string $baseUrl
+     */
+    private string $baseUrl = 'https://api.abuseipdb.com/api/v2/';
 
-    private $headers = []; // array used to store the headers
+    /**
+     * The request headers
+     *
+     * @var string[] $headers
+     */
+    private array $headers = [];
 
-    /* array of all endpoints available by the api, and their respective HTTP request verbs */
-    private $endpoints = [
+    /**
+     * API endpoints available with their respective HTTP request verbs
+     *
+     * @var string[]
+     */
+    private array $endpoints = [
         'check' => 'get',
         'reports' => 'get',
         'blacklist' => 'get',
@@ -24,7 +45,12 @@ class AbuseIPDBLaravel
         'clear-address' => 'delete',
     ];
 
-    private $categories = [
+    /**
+     * Attacks categories available with their respective identifier
+     *
+     * @var string[]
+     */
+    private array $categories = [
         'DNS_Compromise' => 1,
         'DNS_Poisoning' => 2,
         'Fraud_Orders' => 3,
@@ -50,7 +76,17 @@ class AbuseIPDBLaravel
         'IoT_Targeted' => 23,
     ];
 
-    /* function that all requests will be passed through */
+    /**
+     * Function that all requests will be passed through.
+     *
+     * @throws InvalidEndpointException
+     * @throws UnprocessableContentException
+     * @throws TooManyRequestsException
+     * @throws PaymentRequiredException
+     * @throws InvalidAcceptTypeException
+     * @throws MissingAPIKeyException
+     * @throws UnconventionalErrorException
+     */
     public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
         //check that endpoint passed in exists for the api
@@ -63,7 +99,7 @@ class AbuseIPDBLaravel
 
         //check that accept type is application json, or plaintext for blacklist, if not throw error
         if ($acceptType != 'application/json') {
-            if ($acceptType == 'text/plain' && $endpoint == 'blacklist') {
+            if ($acceptType == 'text/plain' && $endpointName == 'blacklist') {
                 //do nothing
             } else {
                 throw new Exceptions\InvalidAcceptTypeException('Accept Type given may not be used.');
@@ -75,8 +111,8 @@ class AbuseIPDBLaravel
         $this->headers['Accept'] = $acceptType;
 
         //get the api key from the env, if not present throw an error
-        if (env('ABUSEIPDB_API_KEY') != null) {
-            $this->headers['Key'] = env('ABUSEIPDB_API_KEY');
+        if (config('abuseipdb.api_key') != null) {
+            $this->headers['Key'] = config('abuseipdb.api_key');
         } else {
             throw new Exceptions\MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
         }
@@ -85,34 +121,30 @@ class AbuseIPDBLaravel
         $client = Http::withHeaders($this->headers);
 
         //verify false here for local development purposes, to avoid certificate issues
-        if (env('APP_ENV') == 'local') {
+        if (app()->islocal()) {
             $client->withOptions(['verify' => false]);
         }
 
         //make the request to the api
-        $response = $client->$requestMethod($this->api_url.$endpointName, $parameters);
+        /** @var Response $response */
+        $response = $client->$requestMethod($this->baseUrl . $endpointName, $parameters);
 
         //extract the status code
         $status = $response->status();
 
-        if ($status == 200) {
+        if ($status === 200) {
             return $response;
-        } else {
-            //check for different possible error codes
-            $message = 'AbuseIPDB: '.$response->object()->errors[0]->detail;
-            if ($status == 429) {
-                throw new Exceptions\TooManyRequestsException($message);
-            } elseif ($status == 402) {
-                throw new Exceptions\PaymentRequiredException($message);
-            } elseif ($status == 422) {
-                throw new Exceptions\UnprocessableContentException($message);
-            } else {
-                //Error is not one of the conventional errors thrown by application
-                throw new Exceptions\UnconventionalErrorException($message);
-            }
         }
 
-        return null;
+        //check for different possible error codes
+        $message = "AbuseIPDB: " . $response->object()->errors[0]->detail;
+
+        match ($status) {
+            429 => throw new Exceptions\TooManyRequestsException($message),
+            402 => throw new Exceptions\PaymentRequiredException($message),
+            422 => throw new Exceptions\UnprocessableContentException($message),
+            default => throw new Exceptions\UnconventionalErrorException($message),
+        };
     }
 
     /* makes call to the check endpoint of api */
@@ -157,4 +189,39 @@ class AbuseIPDBLaravel
 
         return new ResponseObjects\ReportResponse($httpResponse);
     }
+
+    /**
+     * Get the reports for a single IP address (v4 or v6)
+     *
+     * @param string $ipAddress
+     * @param int $maxAgeInDays
+     * @param int $page
+     * @param int $perPage
+     * @return \AbuseIPDB\ResponseObjects\ReportsPaginatedResponse
+     * @throws \AbuseIPDB\Exceptions\InvalidParameterException
+     */
+    public function reports(string $ipAddress, int $maxAgeInDays = 30, int $page = 1, int $perPage = 25): ReportsPaginatedResponse
+    {
+        if ($maxAgeInDays < 1 || $maxAgeInDays > 365) {
+            throw new InvalidParameterException('maxAgeInDays must be between 1 and 365.');
+        }
+
+        if ($page < 1) {
+            throw new InvalidParameterException('page must be at least 1.');
+        }
+
+        if ($perPage < 1 || $perPage > 100) {
+            throw new InvalidParameterException('perPage must be between 1 and 100.');
+        }
+
+        $response = $this->makeRequest('reports', [
+            'ipAddress' => $ipAddress,
+            'maxAgeInDays' => $maxAgeInDays,
+            'page' => $page,
+            'perPage' => $perPage,
+        ]);
+
+        return new ReportsPaginatedResponse($response);
+    }
+
 }

@@ -83,4 +83,20 @@ class TestRequests extends TestCase
         $this->assertObjectHasProperty('ipAddress', $response);
         $this->assertObjectHasProperty('abuseConfidenceScore', $response);
     }
+
+    public function testReportsPaginatedResponseType(): void
+    {
+        $response = AbuseIPDB::reports('127.0.0.1');
+        $this->assertInstanceOf(ResponseObjects\ReportsPaginatedResponse::class, $response);
+    }
+
+    public function testReportsPaginatedResultsType(): void
+    {
+        $response = AbuseIPDB::reports('127.0.0.1');
+
+        $this->assertContainsOnlyInstancesOf(
+            ResponseObjects\ExtraClasses\ResultReports::class,
+            $response->results
+        );
+    }
 }
