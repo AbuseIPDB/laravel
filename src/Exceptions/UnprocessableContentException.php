@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class UnprocessableContentException extends Exception{
-
+class UnprocessableContentException extends Exception
+{
 }
-
-?>

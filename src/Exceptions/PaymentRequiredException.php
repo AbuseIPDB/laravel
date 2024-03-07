@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class PaymentRequiredException extends Exception{
-
+class PaymentRequiredException extends Exception
+{
 }
-
-?>

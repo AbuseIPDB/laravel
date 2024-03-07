@@ -90,8 +90,8 @@ class AbuseIPDBLaravel
     public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
         //check that endpoint passed in exists for the api
-        if (!array_key_exists($endpointName, $this->endpoints)) {
-            throw new Exceptions\InvalidEndpointException("Endpoint name given is invalid.");
+        if (! array_key_exists($endpointName, $this->endpoints)) {
+            throw new Exceptions\InvalidEndpointException('Endpoint name given is invalid.');
         }
 
         //grab the proper request method from the endpoints array
@@ -102,7 +102,7 @@ class AbuseIPDBLaravel
             if ($acceptType == 'text/plain' && $endpointName == 'blacklist') {
                 //do nothing
             } else {
-                throw new Exceptions\InvalidAcceptTypeException("Accept Type given may not be used.");
+                throw new Exceptions\InvalidAcceptTypeException('Accept Type given may not be used.');
             }
 
         }
@@ -114,7 +114,7 @@ class AbuseIPDBLaravel
         if (config('abuseipdb.api_key') != null) {
             $this->headers['Key'] = config('abuseipdb.api_key');
         } else {
-            throw new Exceptions\MissingAPIKeyException("ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.");
+            throw new Exceptions\MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
         }
 
         //create client and assign headers array
@@ -156,7 +156,7 @@ class AbuseIPDBLaravel
             if ($maxAgeInDays >= 1 && $maxAgeInDays <= 365) {
                 $parameters['maxAgeInDays'] = $maxAgeInDays;
             } else {
-                throw new Exceptions\InvalidParameterException("maxAgeInDays must be between 1 and 365.");
+                throw new Exceptions\InvalidParameterException('maxAgeInDays must be between 1 and 365.');
             }
         }
 
@@ -172,10 +172,9 @@ class AbuseIPDBLaravel
     /* makes call to report endpoint of api */
     public function report(string $ip, array|int $categories, string $comment = ''): ResponseObjects\ReportResponse
     {
-
-        foreach ((array)$categories as $cat) {
-            if (!in_array($cat, $this->categories)) {
-                throw new Exceptions\InvalidParameterException("Individual category must be a valid category.");
+        foreach ((array) $categories as $cat) {
+            if (! in_array($cat, $this->categories)) {
+                throw new Exceptions\InvalidParameterException('Individual category must be a valid category.');
             }
         }
 
@@ -224,4 +223,5 @@ class AbuseIPDBLaravel
 
         return new ReportsPaginatedResponse($response);
     }
+
 }

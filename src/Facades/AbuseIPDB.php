@@ -2,6 +2,7 @@
 
 namespace AbuseIPDB\Facades;
 
+
 use AbuseIPDB\ResponseObjects\CheckResponse;
 use AbuseIPDB\ResponseObjects\ReportResponse;
 use Illuminate\Http\Client\Response;

@@ -2,10 +2,8 @@
 
 namespace AbuseIPDB\Exceptions;
 
-use Exception; 
+use Exception;
 
-class InvalidParameterException extends Exception{
-
+class InvalidParameterException extends Exception
+{
 }
-
-?>
