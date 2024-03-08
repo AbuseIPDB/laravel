@@ -87,54 +87,54 @@ class AbuseIPDBLaravel
      */
     public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
-        //check that endpoint passed in exists for the api
+        // check that endpoint passed in exists for the api
         if (! array_key_exists($endpointName, $this->endpoints)) {
             throw new Exceptions\InvalidEndpointException('Endpoint name given is invalid.');
         }
 
-        //grab the proper request method from the endpoints array
+        // grab the proper request method from the endpoints array
         $requestMethod = $this->endpoints[$endpointName];
 
-        //check that accept type is application json, or plaintext for blacklist, if not throw error
+        // check that accept type is application json, or plaintext for blacklist, if not throw error
         if ($acceptType != 'application/json') {
             if ($acceptType == 'text/plain' && $endpointName == 'blacklist') {
-                //do nothing
+                // do nothing
             } else {
                 throw new Exceptions\InvalidAcceptTypeException('Accept Type given may not be used.');
             }
 
         }
 
-        //give the accept type to the headers array
+        // give the accept type to the headers array
         $this->headers['Accept'] = $acceptType;
 
-        //get the api key from the env, if not present throw an error
+        // get the api key from the env, if not present throw an error
         if (config('abuseipdb.api_key') != null) {
             $this->headers['Key'] = config('abuseipdb.api_key');
         } else {
             throw new Exceptions\MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
         }
 
-        //create client and assign headers array
+        // create client and assign headers array
         $client = Http::withHeaders($this->headers);
 
-        //verify false here for local development purposes, to avoid certificate issues
+        // verify false here for local development purposes, to avoid certificate issues
         if (app()->islocal()) {
             $client->withOptions(['verify' => false]);
         }
 
-        //make the request to the api
+        // make the request to the api
         /** @var Response $response */
         $response = $client->$requestMethod($this->baseUrl.$endpointName, $parameters);
 
-        //extract the status code
+        // extract the status code
         $status = $response->status();
 
         if ($status === 200) {
             return $response;
         }
 
-        //check for different possible error codes
+        // check for different possible error codes
         $message = 'AbuseIPDB: '.$response->object()->errors[0]->detail;
 
         match ($status) {
@@ -149,7 +149,7 @@ class AbuseIPDBLaravel
     public function check(string $ipAddress, int $maxAgeInDays = 30, bool $verbose = false): ResponseObjects\CheckResponse
     {
         $parameters['ipAddress'] = $ipAddress;
-        //only send nullable parameters if present
+        // only send nullable parameters if present
         if ($maxAgeInDays) {
             if ($maxAgeInDays >= 1 && $maxAgeInDays <= 365) {
                 $parameters['maxAgeInDays'] = $maxAgeInDays;
@@ -178,7 +178,7 @@ class AbuseIPDBLaravel
 
         $parameters = ['ip' => $ip, 'categories' => $categories];
 
-        //only send nullable parameters if present
+        // only send nullable parameters if present
         if ($comment) {
             $parameters['comment'] = $comment;
         }

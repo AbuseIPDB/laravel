@@ -13,13 +13,13 @@ class ReportResponse extends AbuseResponse
 
     public function __construct(HttpResponse $httpResponse)
     {
-        //construct instance of the parent
+        // construct instance of the parent
         parent::__construct($httpResponse);
 
-        //grab data from the request body
+        // grab data from the request body
         $data = $this->object()->data;
 
-        //assign respective properties from request body to the object
+        // assign respective properties from request body to the object
         $this->ipAddress = $data->ipAddress;
         $this->abuseConfidenceScore = $data->abuseConfidenceScore;
     }

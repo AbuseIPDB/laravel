@@ -6,7 +6,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $enablesPackageDiscoveries = true;
 
-    //register packages to the test class
+    // register packages to the test class
     protected function getPackageProviders($app)
     {
         return [
@@ -14,7 +14,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         ];
     }
 
-    //register aliases to the test classes
+    // register aliases to the test classes
     protected function getPackageAliases($app)
     {
         return [

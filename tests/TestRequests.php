@@ -57,7 +57,7 @@ class TestRequests extends TestCase
         $this->assertEmpty($response->countryName);
     }
 
-    //testing with real ip, testing with 127.0.0.1 will not have a countryName
+    // testing with real ip, testing with 127.0.0.1 will not have a countryName
     public function testCheckResponseWithVerbose()
     {
         $response = AbuseIPDB::check('154.198.211.170', verbose: 1);
@@ -65,7 +65,7 @@ class TestRequests extends TestCase
         $this->assertNotEmpty($response->countryName);
     }
 
-    //array used to ensure that ipAddresses are not reused for different report endpoint tests
+    // array used to ensure that ipAddresses are not reused for different report endpoint tests
     public $testIPAddresses = [
         '127.0.0.4',
         '127.0.0.5',

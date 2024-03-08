@@ -31,7 +31,7 @@ class TestExceptions extends TestCase
     public function testTooManyRequests()
     {
         $this->expectException(Exceptions\TooManyRequestsException::class);
-        //double reporting 127.0.0.1 within 15 minutes should not be allowed, will throw error
+        // double reporting 127.0.0.1 within 15 minutes should not be allowed, will throw error
         AbuseIPDB::report('127.0.0.2', 21);
         AbuseIPDB::report('127.0.0.2', 21);
 
@@ -40,7 +40,7 @@ class TestExceptions extends TestCase
     public function testUnprocessableContent()
     {
         $this->expectException(Exceptions\UnprocessableContentException::class);
-        //category of 31 will throw an unprocessable error
+        // category of 31 will throw an unprocessable error
         AbuseIPDB::makeRequest('report', ['ip' => '127.0.0.1', 'categories' => [21, 31]]);
     }
 }
