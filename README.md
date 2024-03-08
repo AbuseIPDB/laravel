@@ -291,5 +291,3 @@ Additionally, be wary of the <a href="https://www.php.net/manual/en/class.argume
 If using the provided test suite, please note that the test will only run error-free once every 15 minutes. The AbuseIPDB API will throw an error if an IP address is reported more than once in a period of 15 minutes, so any report endpoint tests will throw errors. Any tests that do not use the report endpoint will still work without any waiting period. 
 
 Also, you will need to manually insert your API key inside of `phpunit.xml` where labeled `Insert Key Here`.
-
-
