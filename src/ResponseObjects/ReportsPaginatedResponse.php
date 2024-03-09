@@ -36,8 +36,8 @@ class ReportsPaginatedResponse extends AbuseResponse
         $this->page = $responseData['page'];
         $this->perPage = $responseData['perPage'];
         $this->lastPage = $responseData['lastPage'];
-        $this->nextPageUrl = $responseData['nextPageUrl'];
-        $this->previousPageUrl = $responseData['previousPageUrl'];
+        $this->nextPageUrl = $responseData['nextPageUrl'] ?? '';
+        $this->previousPageUrl = $responseData['previousPageUrl'] ?? '';
 
         $this->results = array_map(
             fn ($result) => new ResultReports($result),
