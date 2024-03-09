@@ -2,6 +2,8 @@
 
 namespace AbuseIPDB\Tests;
 
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $enablesPackageDiscoveries = true;
@@ -25,5 +27,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function setUp(): void
     {
         parent::setUp();
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $app->useEnvironmentPath(__DIR__.'/..');
+        $app->bootstrapWith([LoadEnvironmentVariables::class]);
+        parent::getEnvironmentSetUp($app);
     }
 }

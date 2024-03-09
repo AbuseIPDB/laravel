@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit>
-	<php>
-        <env name="ABUSEIPDB_API_KEY" value="Insert Key Here"/>
-        <env name="APP_ENV" value="local"/>
-	</php>
 	<testsuites>
 		<testsuite name="Package Tests">
 			<directory suffix=".php">

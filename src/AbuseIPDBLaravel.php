@@ -19,7 +19,7 @@ class AbuseIPDBLaravel
     /**
      * The AbuseIPDB API base url
      */
-    private string $baseUrl = 'https://api.abuseipdb.com/api/v2/';
+    private string $baseUrl;
 
     /**
      * The request headers
@@ -73,6 +73,11 @@ class AbuseIPDBLaravel
         'SSH' => 22,
         'IoT_Targeted' => 23,
     ];
+
+    public function __construct()
+    {
+        $this->baseUrl = config('abuseipdb.base_url');
+    }
 
     /**
      * Function that all requests will be passed through.

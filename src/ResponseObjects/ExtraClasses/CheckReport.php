@@ -24,7 +24,7 @@ class CheckReport
         $this->comment = $report->comment;
         $this->categories = $report->categories;
         $this->reporterId = $report->reporterId;
-        $this->reporterCountryCode = $report->reporterCountryCode;
-        $this->reporterCountryName = $report->reporterCountryName;
+        $this->reporterCountryCode = $report->reporterCountryCode ?? '';
+        $this->reporterCountryName = $report->reporterCountryName ?? '';
     }
 }

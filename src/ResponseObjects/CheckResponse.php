@@ -52,7 +52,7 @@ class CheckResponse extends AbuseResponse
         $this->ipAddress = $data->ipAddress;
         $this->isPublic = $data->isPublic;
         $this->ipVersion = $data->ipVersion;
-        $this->isWhitelisted = $data->isWhitelisted;
+        $this->isWhitelisted = $data->isWhitelisted ?? false;
         $this->abuseConfidenceScore = $data->abuseConfidenceScore;
         $this->countryCode = $data->countryCode ?? '';
         $this->usageType = $data->usageType ?? '';
@@ -62,7 +62,7 @@ class CheckResponse extends AbuseResponse
         $this->isTor = $data->isTor;
         $this->totalReports = $data->totalReports;
         $this->numDistinctUsers = $data->numDistinctUsers;
-        $this->lastReportedAt = $data->lastReportedAt;
+        $this->lastReportedAt = $data->lastReportedAt ?? '';
 
         // if not given because verbose was not passed in, then set these to blank values
         $this->countryName = $data->countryName ?? '';

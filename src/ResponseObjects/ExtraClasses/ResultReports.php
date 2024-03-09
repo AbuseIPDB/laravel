@@ -22,7 +22,7 @@ class ResultReports
         $this->comment = $result['comment'];
         $this->categories = $result['categories'];
         $this->reporterId = $result['reporterId'];
-        $this->reporterCountryCode = $result['reporterCountryCode'];
-        $this->reporterCountryName = $result['reporterCountryName'];
+        $this->reporterCountryCode = $result['reporterCountryCode'] ?? '';
+        $this->reporterCountryName = $result['reporterCountryName'] ?? '';
     }
 }
