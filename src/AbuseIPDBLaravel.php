@@ -11,6 +11,7 @@ use AbuseIPDB\Exceptions\TooManyRequestsException;
 use AbuseIPDB\Exceptions\UnconventionalErrorException;
 use AbuseIPDB\Exceptions\UnprocessableContentException;
 use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
+use AbuseIPDB\ResponseObjects\BlacklistResponse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
@@ -221,4 +222,39 @@ class AbuseIPDBLaravel
 
         return new ReportsPaginatedResponse($response);
     }
+
+    /**
+     * Gets the AbuseIPDB blacklist
+     */
+    public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], $ipVersion = [4, 6]): BlacklistResponse
+    {
+        if ($confidenceMinimum < 25 || $confidenceMinimum > 100) {
+            throw new InvalidParameterException('confidenceMinimum must be between 25 and 100.');
+        }
+
+        if ($plaintext) {
+            $acceptType = 'text/plain';
+        } else {
+            $acceptType = 'application/json';
+        }
+
+        $parameters = [
+            'confidenceMinimum' => $confidenceMinimum,
+            'limit' => $limit,
+            'ipVersion' => $ipVersion,
+        ];
+
+        if ($onlyCountries) {
+            $parameters['onlyCountries'] = $onlyCountries;
+        }
+
+        if ($exceptCountries) {
+            $parameters['exceptCountries'] = $exceptCountries;
+        }
+
+        $httpResponse = $this->makeRequest('blacklist', $parameters, $acceptType);
+
+        return new BlacklistResponse($httpResponse);
+    }
+
 }
