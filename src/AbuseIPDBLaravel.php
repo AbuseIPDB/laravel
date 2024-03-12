@@ -225,11 +225,31 @@ class AbuseIPDBLaravel
 
     /**
      * Gets the AbuseIPDB blacklist
+     * 
+     * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
-    public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], $ipVersion = [4, 6]): BlacklistResponse
+    public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], $ipVersion = null): BlacklistResponse
     {
         if ($confidenceMinimum < 25 || $confidenceMinimum > 100) {
             throw new InvalidParameterException('confidenceMinimum must be between 25 and 100.');
+        }
+
+        foreach ($onlyCountries as $countryCode) {
+            if (strlen($countryCode) != 2) {
+                throw new InvalidParameterException('Country codes must be 2 characters long.');
+            }
+        }
+
+        foreach ($exceptCountries as $countryCode) {
+            if (strlen($countryCode) != 2) {
+                throw new InvalidParameterException('Country codes must be 2 characters long.');
+            }
+        }
+
+        if ($ipVersion) {
+            if ($ipVersion != 4 && $ipVersion != 6) {
+                throw new InvalidParameterException('ipVersion must be 4 or 6.');
+            }
         }
 
         if ($plaintext) {
@@ -241,8 +261,11 @@ class AbuseIPDBLaravel
         $parameters = [
             'confidenceMinimum' => $confidenceMinimum,
             'limit' => $limit,
-            'ipVersion' => $ipVersion,
         ];
+
+        if ($ipVersion) {
+            $parameters['ipVersion'] = $ipVersion;
+        }
 
         if ($onlyCountries) {
             $parameters['onlyCountries'] = $onlyCountries;

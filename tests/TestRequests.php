@@ -99,4 +99,20 @@ class TestRequests extends TestCase
             $response->results
         );
     }
+
+    public function testBlacklistResponseType(): void
+    {
+        $response = AbuseIPDB::blacklist();
+        $this->assertInstanceOf(ResponseObjects\BlacklistResponse::class, $response);
+    }
+
+    public function testBlacklistResultsType(): void
+    {
+        $response = AbuseIPDB::blacklist();
+
+        $this->assertContainsOnlyInstancesOf(
+            ResponseObjects\ExtraClasses\BlacklistedIP::class,
+            $response->blacklistedIPs
+        );
+    }
 }

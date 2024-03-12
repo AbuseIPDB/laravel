@@ -3,11 +3,12 @@
 namespace AbuseIPDB\ResponseObjects;
 
 use Illuminate\Http\Client\Response as HttpResponse;
+use AbuseIPDB\ResponseObjects\ExtraClasses\BlacklistedIP;
 
 class BlacklistResponse extends AbuseResponse
 {
     /* these properties reflect the body of a response from the blacklist endpoint */
-    
+    public $blacklistedIPs = [];
 
     public function __construct(HTTPResponse $httpResponse)
     {
@@ -18,7 +19,9 @@ class BlacklistResponse extends AbuseResponse
         $data = $this->object()->data;
 
         // assign respective properties from response to the object
-
+        foreach ($data as $blacklistedIP) {
+            $this->blacklistedIPs[] = new BlacklistedIP($blacklistedIP);
+        }
 
     }
 }
