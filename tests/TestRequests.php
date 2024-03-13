@@ -60,7 +60,7 @@ class TestRequests extends TestCase
     // testing with real ip, testing with 127.0.0.1 will not have a countryName
     public function testCheckResponseWithVerbose()
     {
-        $response = AbuseIPDB::check(env('BAD_IP_TO_TEST'), verbose: 1);
+        $response = AbuseIPDB::check(env('BAD_IP_TO_TEST'), verbose: 1, maxAgeInDays: 365);
         $this->assertNotEmpty($response->reports);
         $this->assertNotEmpty($response->countryName);
     }

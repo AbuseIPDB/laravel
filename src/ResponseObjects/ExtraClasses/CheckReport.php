@@ -13,7 +13,10 @@ class CheckReport
 
     public int $reporterId;
 
-    public string $reporterCountryCode;
+    /**
+     * @var string|null
+     */
+    public $reporterCountryCode;
 
     public string $reporterCountryName;
 
