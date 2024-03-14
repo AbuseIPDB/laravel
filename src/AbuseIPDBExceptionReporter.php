@@ -6,7 +6,7 @@ use AbuseIPDB\Facades\AbuseIPDB;
 
 class AbuseIPDBExceptionReporter
 {
-    public static function reportSuspiciousOperationException(): ?ResponseObjects\ReportResponse
+    public static function reportSuspiciousOperationException(): ResponseObjects\ReportResponse|false
     {
         $attackingAddress = request()->ip();
 
@@ -22,9 +22,11 @@ class AbuseIPDBExceptionReporter
 
             return $response;
         } catch (Exceptions\TooManyRequestsException $e) {
+            // Do nothing
         } catch (\Exception $e) {
+            // Do nothing
         }
 
-        return null;
+        return false;
     }
 }

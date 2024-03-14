@@ -2,19 +2,21 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use Illuminate\Http\Client\Response as HttpResponse;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Client\Response;
 
 class BlacklistPlaintextResponse extends AbuseResponse
 {
+    /**
+     * @var string[]
+     */
     public $blacklistedIPs;
 
-    public function __construct(HTTPResponse $httpResponse)
+    public function __construct(Response $response)
     {
-        parent::__construct($httpResponse);
+        parent::__construct($response);
 
         $textResponse = $this->body();
 
-        $this->blacklistedIPs = new Collection(explode("\n", $textResponse));
+        $this->blacklistedIPs = explode("\n", $textResponse);
     }
 }

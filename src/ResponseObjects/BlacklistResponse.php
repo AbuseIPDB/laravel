@@ -2,21 +2,32 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use Illuminate\Http\Client\Response as HttpResponse;
 use AbuseIPDB\ResponseObjects\ExtraClasses\BlacklistedIP;
+use Illuminate\Http\Client\Response;
+use DateTime;
 
 class BlacklistResponse extends AbuseResponse
 {
-    public $blacklistedIPs = [];
+    /**
+     * @var BlacklistedIP[]
+     */
+    public $blacklistedIPs;
 
-    public function __construct(HTTPResponse $httpResponse)
+    public Datetime $generatedAt;
+
+    public function __construct(Response $response)
     {
-        parent::__construct($httpResponse);
+        parent::__construct($response);
 
-        $data = $this->object()->data;
+        $fullObject = $this->object();
+        $data = $fullObject->data;
+        $meta = $fullObject->meta;
 
+        $this->generatedAt = DateTime::createFromFormat(DateTime::ATOM, $meta->generatedAt);
+
+        $this->blacklistedIPs = [];
         foreach ($data as $blacklistedIP) {
-            $this->blacklistedIPs[] = new BlacklistedIP($blacklistedIP);
+            array_push($this->blacklistedIPs, new BlacklistedIP($blacklistedIP));
         }
     }
 }

@@ -2,9 +2,11 @@
 
 namespace AbuseIPDB\ResponseObjects\ExtraClasses;
 
+use DateTime;
+
 class ReportInfo
 {
-    public string $reportedAt;
+    public DateTime $reportedAt;
 
     public string $comment;
 
@@ -18,7 +20,7 @@ class ReportInfo
 
     public function __construct($report)
     {
-        $this->reportedAt = $report->reportedAt;
+        $this->reportedAt = DateTime::createFromFormat(DateTime::ATOM, $report->reportedAt);
         $this->comment = $report->comment;
         $this->categories = $report->categories;
         $this->reporterId = $report->reporterId;

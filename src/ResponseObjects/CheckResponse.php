@@ -2,7 +2,7 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use Illuminate\Http\Client\Response as HttpResponse;
+use Illuminate\Http\Client\Response;
 use AbuseIPDB\ResponseObjects\ExtraClasses\ReportInfo;
 use DateTime;
 
@@ -43,9 +43,9 @@ class CheckResponse extends AbuseResponse
      */
     public array $reports;
 
-    public function __construct(HTTPResponse $httpResponse)
+    public function __construct(Response $response)
     {
-        parent::__construct($httpResponse);
+        parent::__construct($response);
 
         $data = $this->object()->data;
 
@@ -65,7 +65,7 @@ class CheckResponse extends AbuseResponse
         $this->countryName = $data->countryName ?? null;
 
         $lastReportedAtParsed = DateTime::createFromFormat(DateTime::ATOM, $data->lastReportedAt);
-        $this->lastReportedAt = $lastReportedAtParsed ? : null;        
+        $this->lastReportedAt = $lastReportedAtParsed ?: null;
 
         $this->reports = [];
         if (isset($data->reports)) {

@@ -4,21 +4,24 @@ namespace AbuseIPDB\ResponseObjects\ExtraClasses;
 
 use DateTime;
 
-class BlacklistedIP
+class CheckBlockIP
 {
     public string $ipAddress;
 
-    public string $countryCode;
+    public int $numReports;
+
+    public DateTime $mostRecentReport;
+
+    public ?string $countryCode;
 
     public int $abuseConfidenceScore;
-
-    public DateTime $lastReportedAt;
 
     public function __construct($ipData)
     {
         $this->ipAddress = $ipData->ipAddress;
+        $this->numReports = $ipData->numReports;
+        $this->mostRecentReport = DateTime::createFromFormat(\DateTime::ATOM, $ipData->mostRecentReport);
         $this->countryCode = $ipData->countryCode;
         $this->abuseConfidenceScore = $ipData->abuseConfidenceScore;
-        $this->lastReportedAt = DateTime::createFromFormat(DateTime::ATOM, $ipData->lastReportedAt);
     }
 }

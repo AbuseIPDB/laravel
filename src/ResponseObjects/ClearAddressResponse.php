@@ -4,11 +4,9 @@ namespace AbuseIPDB\ResponseObjects;
 
 use Illuminate\Http\Client\Response;
 
-class ReportResponse extends AbuseResponse
+class ClearAddressResponse extends AbuseResponse
 {
-    public string $ipAddress;
-
-    public int $abuseConfidenceScore;
+    public int $numReportsDeleted;
 
     public function __construct(Response $response)
     {
@@ -16,7 +14,6 @@ class ReportResponse extends AbuseResponse
 
         $data = $this->object()->data;
 
-        $this->ipAddress = $data->ipAddress;
-        $this->abuseConfidenceScore = $data->abuseConfidenceScore;
+        $this->numReportsDeleted = $data->numReportsDeleted;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use Illuminate\Http\Client\Response as HttpResponse;
+use Illuminate\Http\Client\Response;
 
-class AbuseResponse extends HttpResponse
+class AbuseResponse extends Response
 {
     public int $x_ratelimit_limit;
 
@@ -16,9 +16,9 @@ class AbuseResponse extends HttpResponse
 
     public string $cf_cache_status;
 
-    public function __construct(HttpResponse $httpResponse)
+    public function __construct(Response $response)
     {
-        parent::__construct($httpResponse);
+        parent::__construct($response);
 
         $this->content_type = $this->header('Content-Type');
         $this->cache_control = $this->header('Cache-Control');
