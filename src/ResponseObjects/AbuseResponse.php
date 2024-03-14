@@ -6,9 +6,6 @@ use Illuminate\Http\Client\Response as HttpResponse;
 
 class AbuseResponse extends HttpResponse
 {
-    /* these properties are headers that can be specifically useful for AbuseIPDB information
-    These will be accessible by the child objects
-    */
     public int $x_ratelimit_limit;
 
     public int $x_ratelimit_remaining;
@@ -23,7 +20,6 @@ class AbuseResponse extends HttpResponse
     {
         parent::__construct($httpResponse);
 
-        /* grabbing and assigning headers directly from the request */
         $this->content_type = $this->header('Content-Type');
         $this->cache_control = $this->header('Cache-Control');
         $this->x_ratelimit_limit = $this->header('X-RateLimit-Limit');

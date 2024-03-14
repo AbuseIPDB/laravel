@@ -2,8 +2,6 @@
 
 namespace AbuseIPDB;
 
-use AbuseIPDB\Exceptions\InvalidAcceptTypeException;
-use AbuseIPDB\Exceptions\InvalidEndpointException;
 use AbuseIPDB\Exceptions\InvalidParameterException;
 use AbuseIPDB\Exceptions\MissingAPIKeyException;
 use AbuseIPDB\Exceptions\PaymentRequiredException;
@@ -12,6 +10,7 @@ use AbuseIPDB\Exceptions\UnconventionalErrorException;
 use AbuseIPDB\Exceptions\UnprocessableContentException;
 use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
 use AbuseIPDB\ResponseObjects\BlacklistResponse;
+use AbuseIPDB\ResponseObjects\BlacklistPlaintextResponse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
@@ -19,15 +18,10 @@ class AbuseIPDBLaravel
 {
     /**
      * The AbuseIPDB API base url
+     * 
+     * @var string
      */
     private string $baseUrl;
-
-    /**
-     * The request headers
-     *
-     * @var string[]
-     */
-    private array $headers = [];
 
     /**
      * API endpoints available with their respective HTTP request verbs
@@ -75,65 +69,40 @@ class AbuseIPDBLaravel
         'IoT_Targeted' => 23,
     ];
 
-    public function __construct()
-    {
-        $this->baseUrl = config('abuseipdb.base_url');
-    }
+    private $client;
 
     /**
-     * Function that all requests will be passed through.
+     * Function that all requests will be passed through
      *
-     * @throws InvalidEndpointException
+     * @throws MissingAPIKeyException
      * @throws UnprocessableContentException
      * @throws TooManyRequestsException
      * @throws PaymentRequiredException
-     * @throws InvalidAcceptTypeException
-     * @throws MissingAPIKeyException
      * @throws UnconventionalErrorException
      */
-    public function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
+    private function makeRequest($endpointName, $parameters, $acceptType = 'application/json'): ?Response
     {
-        // check that endpoint passed in exists for the api
-        if (! array_key_exists($endpointName, $this->endpoints)) {
-            throw new Exceptions\InvalidEndpointException('Endpoint name given is invalid.');
-        }
-
-        // grab the proper request method from the endpoints array
-        $requestMethod = $this->endpoints[$endpointName];
-
-        // check that accept type is application json, or plaintext for blacklist, if not throw error
-        if ($acceptType != 'application/json') {
-            if ($acceptType == 'text/plain' && $endpointName == 'blacklist') {
-                // do nothing
-            } else {
-                throw new Exceptions\InvalidAcceptTypeException('Accept Type given may not be used.');
+        if (! $this->client) {
+            if (! config('abuseipdb.api_key')) {
+                throw new MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
             }
 
+            $this->baseUrl = config('abuseipdb.base_url');
+            $this->client = Http::withHeaders([
+                'X-Request-Source' => 'Laravel_' . app()->version() . ';Laravel_' . config('abuseipdb.version') . ';',
+                'Key' => config('abuseipdb.api_key'),
+            ])->withOptions(['verify' => ! app()->islocal()]);
         }
 
-        // give the accept type to the headers array
-        $this->headers['Accept'] = $acceptType;
+        $requestMethod = $this->endpoints[$endpointName];
 
-        // get the api key from the env, if not present throw an error
-        if (config('abuseipdb.api_key') != null) {
-            $this->headers['Key'] = config('abuseipdb.api_key');
-        } else {
-            throw new Exceptions\MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
-        }
+        $this->client->withHeader('Accept', $acceptType);
 
-        // create client and assign headers array
-        $client = Http::withHeaders($this->headers);
+        /** 
+         * @var Response $response 
+         */
+        $response = $this->client->$requestMethod($this->baseUrl.$endpointName, $parameters);
 
-        // verify false here for local development purposes, to avoid certificate issues
-        if (app()->islocal()) {
-            $client->withOptions(['verify' => false]);
-        }
-
-        // make the request to the api
-        /** @var Response $response */
-        $response = $client->$requestMethod($this->baseUrl.$endpointName, $parameters);
-
-        // extract the status code
         $status = $response->status();
 
         if ($status === 200) {
@@ -151,7 +120,11 @@ class AbuseIPDBLaravel
         };
     }
 
-    /* makes call to the check endpoint of api */
+    /**
+     * Checks an IP address against the AbuseIPDB database
+     * 
+     * @throws InvalidParameterException
+     */
     public function check(string $ipAddress, int $maxAgeInDays = 30, bool $verbose = false): ResponseObjects\CheckResponse
     {
         $parameters['ipAddress'] = $ipAddress;
@@ -173,7 +146,11 @@ class AbuseIPDBLaravel
         return new ResponseObjects\CheckResponse($httpResponse);
     }
 
-    /* makes call to report endpoint of api */
+    /**
+     * Reports an IP address to AbuseIPDB
+     * 
+     * @throws \AbuseIPDB\Exceptions\InvalidParameterException
+     */
     public function report(string $ip, array|int $categories, string $comment = ''): ResponseObjects\ReportResponse
     {
         foreach ((array) $categories as $cat) {
@@ -228,7 +205,7 @@ class AbuseIPDBLaravel
      * 
      * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
-    public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], $ipVersion = null): BlacklistResponse
+    public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], $ipVersion = null): BlacklistResponse|BlacklistPlaintextResponse
     {
         if ($confidenceMinimum < 25 || $confidenceMinimum > 100) {
             throw new InvalidParameterException('confidenceMinimum must be between 25 and 100.');
@@ -246,16 +223,8 @@ class AbuseIPDBLaravel
             }
         }
 
-        if ($ipVersion) {
-            if ($ipVersion != 4 && $ipVersion != 6) {
-                throw new InvalidParameterException('ipVersion must be 4 or 6.');
-            }
-        }
-
-        if ($plaintext) {
-            $acceptType = 'text/plain';
-        } else {
-            $acceptType = 'application/json';
+        if (isset($ipVersion) && $ipVersion != 4 && $ipVersion != 6) {
+            throw new InvalidParameterException('ipVersion must be 4 or 6.');
         }
 
         $parameters = [
@@ -275,9 +244,20 @@ class AbuseIPDBLaravel
             $parameters['exceptCountries'] = $exceptCountries;
         }
 
+        if ($plaintext) {
+            $acceptType = 'text/plain';
+            $parameters['plaintext'] = $plaintext;
+        } else {
+            $acceptType = 'application/json';
+        }
+
         $httpResponse = $this->makeRequest('blacklist', $parameters, $acceptType);
 
-        return new BlacklistResponse($httpResponse);
+        if ($plaintext) {
+            return new BlacklistPlaintextResponse($httpResponse);
+        } else {
+            return new BlacklistResponse($httpResponse);
+        }
     }
 
 }

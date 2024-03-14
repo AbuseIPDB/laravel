@@ -35,4 +35,6 @@ class TestCase extends \Orchestra\Testbench\TestCase
         $app->bootstrapWith([LoadEnvironmentVariables::class]);
         parent::getEnvironmentSetUp($app);
     }
+
+    
 }

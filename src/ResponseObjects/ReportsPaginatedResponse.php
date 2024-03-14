@@ -2,7 +2,7 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use AbuseIPDB\ResponseObjects\ExtraClasses\ResultReports;
+use AbuseIPDB\ResponseObjects\ExtraClasses\ReportInfo;
 use Illuminate\Http\Client\Response;
 
 class ReportsPaginatedResponse extends AbuseResponse
@@ -17,12 +17,12 @@ class ReportsPaginatedResponse extends AbuseResponse
 
     public int $lastPage;
 
-    public string $nextPageUrl;
+    public ?string $nextPageUrl;
 
     public ?string $previousPageUrl;
 
     /**
-     * @var ResultReports[]
+     * @var ReportInfo[]
      */
     public array $results;
 
@@ -30,18 +30,18 @@ class ReportsPaginatedResponse extends AbuseResponse
     {
         parent::__construct($response);
 
-        $responseData = $response->json('data');
+        $data = $this->object()->data;
 
-        $this->total = $responseData['total'];
-        $this->page = $responseData['page'];
-        $this->perPage = $responseData['perPage'];
-        $this->lastPage = $responseData['lastPage'];
-        $this->nextPageUrl = $responseData['nextPageUrl'] ?? '';
-        $this->previousPageUrl = $responseData['previousPageUrl'] ?? '';
+        $this->total = $data->total;
+        $this->page = $data->page;
+        $this->perPage = $data->perPage;
+        $this->lastPage = $data->lastPage;
+        $this->nextPageUrl = $data->nextPageUrl;
+        $this->previousPageUrl = $data->previousPageUrl;
 
-        $this->results = array_map(
-            fn ($result) => new ResultReports($result),
-            $responseData['results']
-        );
+        $this->results = [];
+        foreach ($data->results as $result) {
+            array_push($this->results, new ReportInfo($result));
+        }
     }
 }

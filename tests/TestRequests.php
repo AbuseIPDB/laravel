@@ -7,12 +7,6 @@ use AbuseIPDB\ResponseObjects;
 
 class TestRequests extends TestCase
 {
-    public function testIlluminateResponseType()
-    {
-        $response = AbuseIPDB::makeRequest('check', ['ipAddress' => '127.0.0.1']);
-        $this->assertInstanceOf(\Illuminate\Http\Client\Response::class, $response);
-    }
-
     public function testCheckResponseType()
     {
         $response = AbuseIPDB::check('127.0.0.1');
@@ -95,7 +89,7 @@ class TestRequests extends TestCase
         $response = AbuseIPDB::reports(env('BAD_IP_TO_TEST'));
 
         $this->assertContainsOnlyInstancesOf(
-            ResponseObjects\ExtraClasses\ResultReports::class,
+            ResponseObjects\ExtraClasses\ReportInfo::class,
             $response->results
         );
     }
