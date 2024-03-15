@@ -1,6 +1,6 @@
-# AbuseIPDB Laravel API Integration 
+# AbuseIPDB Laravel API Integration
 
-Package to easily integrate AbuseIPDB API with your Laravel project. 
+Package to easily integrate the AbuseIPDB API with your Laravel project.
 
 ## Installation
 
@@ -8,11 +8,9 @@ To install using Composer:
 
     composer require abuseipdb/laravel
 
-Add `ABUSEIPDB_API_KEY` to your `.env` file. Keys are made on the <a href="https://www.abuseipdb.com/" target="_blank">AbuseIPDB website</a> for users with accounts. 
+Add `ABUSEIPDB_API_KEY` to your `.env` file. You can obtain a free key from the <a href="https://www.abuseipdb.com/" target="_blank">AbuseIPDB website</a> once you've registered an account.
 
-```
-ABUSEIPDB_API_KEY=your_key
-```
+    ABUSEIPDB_API_KEY=your_key
 
 Remember, the AbuseIPDB API keys are to be treated like private keys -- don't have them publicly accessible!
 
@@ -20,60 +18,65 @@ For your application's safety, your `.env` file should never be public or commit
 
 ## Usage
 
-### Using Main Package Functions:
-The main functions of the package are stored in the namespace `Abuseipdb\AbuseIPDBLaravel.php`. For your convenience, this package uses a facade to allow access to the main functions. 
-To use the facade, including the following in the file you wish to use it in: 
+### Using Main Package Functions
+
+The main functions of the package are found in `Abuseipdb\AbuseIPDBLaravel.php`. The recommended way to access these functions is through the included facade. To use it, use:
 
 ```php
 use AbuseIPDB\Facades\AbuseIPDB;
 ```
-Then the functions can be called statically:
+
+Then the functions can be called statically (non-exhaustive list):
+
 ```php
-$response = AbuseIPDB::check('127.0.0.1');
+$checkResponse = AbuseIPDB::check('127.0.0.1');
+$reportResponse = AbuseIPDB::report('127.0.0.1', categories: [18, 22]);
+$reportsResponse = AbuseIPDB::reports('127.0.0.1', maxAgeInDays:10);
+$blacklistResponse = AbuseIPDB::blacklist(limit: 1000);
 ```
 
-These functions will be explained in greater detail later in the documentation. 
+This is the recommended method of accessing the functionality of the AbuseIPDB package.
 
-### Quick start for SuspiciousOperationException reporting:
+### Quick start for SuspiciousOperationException reporting
 
 This package has support for automatically reporting instances of Symfony's `SuspiciousOperationException` in your Laravel project. To use this functionality, include the following code in your projects `app\Exceptions\Handler.php`:
 
-At the top of file: 
+#### At the top of file
 
 ```php
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use AbuseIPDB\AbuseIPDBExceptionReporter;
-
 ```
 
-Inside of the Handler's `register()` function:
+#### Inside of the Handler's `register()` function
 
 ```php
  $this->stopIgnoring(SuspiciousOperationException::class);
 ```
 
-Inside of register function's `$this->reportable(function (Throwable $e) {}`
+#### Inside of register function's `$this->reportable(function (Throwable $e) {}`
+
 ```php
 if ($e instanceof SuspiciousOperationException) {
     AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
 }
-```            
-If your handler's `register()` does not contain the aforementioned `$this->reportable`, then include the following:
+```
+
+#### If your handler's `register()` does not contain the aforementioned `$this->reportable`
+
 ```php
  $this->reportable(function (Throwable $e) {
     if ($e instanceof SuspiciousOperationException) {
         AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
     }    
 });
-
 ```
 
-Now your project will automatically report to AbuseIPDB if a SuspiciousOperationException is thrown. 
+Now, your project will automatically report to AbuseIPDB when a `SuspiciousOperationException` is thrown.
 
 ## Main Functions
 
-This package implements functions to easily interact with endpoints of the AbuseIPDB API. 
-These functions are stored in the `AbuseIPDBLaravel.php` and can be called statically with the `AbuseIPDB` facade. 
+This package implements functions to easily interact with endpoints of the AbuseIPDB API. These functions are found in `AbuseIPDBLaravel.php` and can be called statically with the `AbuseIPDB` facade.
 
 ### makeRequest()
 

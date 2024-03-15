@@ -13,7 +13,7 @@ class BlacklistResponse extends AbuseResponse
      */
     public $blacklistedIPs;
 
-    public Datetime $generatedAt;
+    public DateTime $generatedAt;
 
     public function __construct(Response $response)
     {

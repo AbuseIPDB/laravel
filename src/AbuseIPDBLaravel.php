@@ -123,10 +123,10 @@ class AbuseIPDBLaravel
         $message = 'AbuseIPDB: '.$response->object()->errors[0]->detail;
 
         match ($status) {
-            429 => throw new Exceptions\TooManyRequestsException($message),
-            402 => throw new Exceptions\PaymentRequiredException($message),
-            422 => throw new Exceptions\UnprocessableContentException($message),
-            default => throw new Exceptions\UnconventionalErrorException($message),
+            429 => throw new TooManyRequestsException($message),
+            402 => throw new PaymentRequiredException($message),
+            422 => throw new UnprocessableContentException($message),
+            default => throw new UnconventionalErrorException($message),
         };
     }
 

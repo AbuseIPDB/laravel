@@ -20,7 +20,7 @@ class CheckBlockIP
     {
         $this->ipAddress = $ipData->ipAddress;
         $this->numReports = $ipData->numReports;
-        $this->mostRecentReport = DateTime::createFromFormat(\DateTime::ATOM, $ipData->mostRecentReport);
+        $this->mostRecentReport = DateTime::createFromFormat(DateTime::ATOM, $ipData->mostRecentReport);
         $this->countryCode = $ipData->countryCode;
         $this->abuseConfidenceScore = $ipData->abuseConfidenceScore;
     }
