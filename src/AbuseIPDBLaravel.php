@@ -125,7 +125,12 @@ class AbuseIPDBLaravel
             return $response;
         }
 
-        $message = 'AbuseIPDB: '.$response->object()->errors[0]->detail;
+        $message = 'AbuseIPDB: ';
+        try {
+            $message .= $response->json()['errors'][0]['detail'];
+        } catch (\Exception $e) {
+            $message .= 'An error occurred.';
+        }
 
         match ($status) {
             429 => throw new TooManyRequestsException($message),

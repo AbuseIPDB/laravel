@@ -36,6 +36,8 @@
         "laravel/pint": "^1.13"
     },
     "require": {
-        "laravel/framework": "^10.0|^11.0"
-    }
+        "laravel/framework": "^10.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "version": "1.0.2"
 }
