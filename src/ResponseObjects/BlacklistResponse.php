@@ -3,8 +3,8 @@
 namespace AbuseIPDB\ResponseObjects;
 
 use AbuseIPDB\ResponseObjects\ExtraClasses\BlacklistedIP;
-use Illuminate\Http\Client\Response;
 use DateTime;
+use Illuminate\Http\Client\Response;
 
 class BlacklistResponse extends AbuseResponse
 {

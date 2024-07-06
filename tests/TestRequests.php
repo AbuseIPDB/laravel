@@ -131,7 +131,7 @@ class TestRequests extends TestCase
 
     public function testReportParams(): void
     {
-        $response = AbuseIPDB::report('127.0.0.8', [18, 22], "Bad IP", new \DateTime());
+        $response = AbuseIPDB::report('127.0.0.8', [18, 22], 'Bad IP', new \DateTime());
         $this->assertInstanceOf(ResponseObjects\ReportResponse::class, $response);
     }
 }

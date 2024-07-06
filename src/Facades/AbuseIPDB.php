@@ -3,8 +3,8 @@
 namespace AbuseIPDB\Facades;
 
 use AbuseIPDB\AbuseIPDBLaravel;
-use Illuminate\Support\Facades\Facade;
 use Datetime;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static CheckResponse check(string $ipAddress, int $maxAgeInDays = 30, bool $verbose = false)

@@ -2,8 +2,8 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use Illuminate\Http\Client\Response;
 use DateTime;
+use Illuminate\Http\Client\Response;
 
 class BlacklistPlaintextResponse extends AbuseResponse
 {

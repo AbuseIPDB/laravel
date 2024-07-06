@@ -2,9 +2,9 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
-use Illuminate\Http\Client\Response;
 use AbuseIPDB\ResponseObjects\ExtraClasses\ReportInfo;
 use DateTime;
+use Illuminate\Http\Client\Response;
 
 class CheckResponse extends AbuseResponse
 {

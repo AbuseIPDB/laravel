@@ -7,10 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AbuseIPDBLaravelServiceProvider extends ServiceProvider
 {
-    public function boot()
-    {
-
-    }
+    public function boot() {}
 
     public function register()
     {
