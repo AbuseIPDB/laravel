@@ -82,6 +82,7 @@ class AbuseIPDBLaravel
         $this->client = Http::withHeaders([
             'X-Request-Source' => 'Laravel_'.app()->version().';Laravel_'.config('abuseipdb.version').';',
             'Key' => config('abuseipdb.api_key'),
+            'Accept' => 'application/json',
         ])->withOptions([
             'verify' => ! app()->islocal(),
         ])->baseUrl(config('abuseipdb.base_url'));
@@ -108,7 +109,7 @@ class AbuseIPDBLaravel
 
         $requestMethod = self::ENDPOINTS[$endpointName];
 
-        $this->client->withHeader('Accept', $acceptType);
+        $this->client->replaceHeaders(['Accept' => $acceptType]);
 
         if ($fileContents) {
             $this->client->attach('csv', $fileContents, 'report.csv');
@@ -127,9 +128,9 @@ class AbuseIPDBLaravel
 
         $message = 'AbuseIPDB: ';
         try {
-            $message .= $response->json()['errors'][0]['detail'];
+            $message .= 'An error occurred. Status code: ' . $status . '. Detail: ' . $response->json()['errors'][0]['detail'];
         } catch (\Exception $e) {
-            $message .= 'An error occurred.';
+            $message .= 'An error occurred. Status code: ' . $status . '.';
         }
 
         match ($status) {
