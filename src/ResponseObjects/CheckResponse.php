@@ -52,7 +52,7 @@ class CheckResponse extends AbuseResponse
         $this->ipAddress = $data->ipAddress;
         $this->isPublic = $data->isPublic;
         $this->ipVersion = $data->ipVersion;
-        $this->isWhitelisted = $data->isWhitelisted;
+        $this->isWhitelisted = $data->isWhitelisted ?? null;
         $this->abuseConfidenceScore = $data->abuseConfidenceScore;
         $this->countryCode = $data->countryCode ?? null;
         $this->usageType = $data->usageType;

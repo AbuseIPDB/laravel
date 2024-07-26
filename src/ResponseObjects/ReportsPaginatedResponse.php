@@ -36,8 +36,8 @@ class ReportsPaginatedResponse extends AbuseResponse
         $this->page = $data->page;
         $this->perPage = $data->perPage;
         $this->lastPage = $data->lastPage;
-        $this->nextPageUrl = $data->nextPageUrl;
-        $this->previousPageUrl = $data->previousPageUrl;
+        $this->nextPageUrl = $data->nextPageUrl ?? null;
+        $this->previousPageUrl = $data->previousPageUrl ?? null;
 
         $this->results = [];
         foreach ($data->results as $result) {
