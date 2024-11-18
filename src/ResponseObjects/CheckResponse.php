@@ -20,9 +20,9 @@ class CheckResponse extends AbuseResponse
 
     public ?string $countryCode;
 
-    public string $usageType;
+    public ?string $usageType;
 
-    public string $isp;
+    public ?string $isp;
 
     public ?string $domain;
 
