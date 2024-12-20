@@ -1,41 +1,127 @@
-# AbuseIPDB Laravel API Integration
+<p align="center">
+    <a href="https://github.com/AbuseIPDB/laravel" target="_blank">
+        <img src=".github/logo.png" alt="AbuseIPDB Logo" />
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/dt/AbuseIPDB/laravel" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/v/AbuseIPDB/laravel" alt="Latest Stable Version"></a>
+    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/l/AbuseIPDB/laravel" alt="License"></a>
+</p>
+
+
+# AbuseIPDB
 
 Package to easily integrate the AbuseIPDB API with your Laravel project.
 
 ## Installation
 
-To install using Composer:
+You can install the package via composer:
 
-    composer require abuseipdb/laravel
+```shell
+  composer require abuseipdb/laravel
+```
 
-Add `ABUSEIPDB_API_KEY` to your `.env` file. You can obtain a free key from the <a href="https://www.abuseipdb.com/" target="_blank">AbuseIPDB website</a> once you've registered an account.
+After installing, you need to add `ABUSEIPDB_API_KEY` to your `.env` file.
 
-    ABUSEIPDB_API_KEY=your_key
+```dotenv
+ABUSEIPDB_API_KEY=your_key
+```
 
-Remember, the AbuseIPDB API keys are to be treated like private keys -- don't have them publicly accessible!
+Register on [abuseipdb.com](https://www.abuseipdb.com/) to get a free API key.
 
-For your application's safety, your `.env` file should never be public or committed to source control.
+> [!WARNING]
+> Remember, the AbuseIPDB API keys are to be treated like private keys -- don't have them publicly accessible!
 
 ## Usage
 
-### Using Main Package Functions
+### Methods
 
-The main functions of the package are found in `Abuseipdb\AbuseIPDBLaravel.php`. The recommended way to access these functions is through the included facade. To use it, use:
+All methods are static, and can be called using the `AbuseIPDB` facade.
 
-```php
-use AbuseIPDB\Facades\AbuseIPDB;
-```
+`Check`
 
-Then the functions can be called statically (non-exhaustive list):
+Inspect details regarding the IP address queried.
 
 ```php
-$checkResponse = AbuseIPDB::check('127.0.0.1');
-$reportResponse = AbuseIPDB::report('127.0.0.1', categories: [18, 22]);
-$reportsResponse = AbuseIPDB::reports('127.0.0.1', maxAgeInDays:10);
-$blacklistResponse = AbuseIPDB::blacklist(limit: 1000);
+AbuseIPDB::check('127.0.0.1');
 ```
 
-This is the recommended method of accessing the functionality of the AbuseIPDB package.
+Optional parameters:
+- `maxAgeInDays`: The maximum age of reports to return (1-365), defaults to 30
+- `verbose`: Whether to include verbose information (reports), defaults to false
+
+`Report`
+
+Report an IP address to AbuseIPDB. At least one category must be specified.
+
+```php
+AbuseIPDB::report('127.0.0.1', categories: [18, 22]);
+```
+
+Optional parameters:
+- `comment`: An optional comment to include with the report, for example a logged indicator of attack
+- `timestamp`: An optional timestamp to include with the report indicating the time of attack
+
+`Reports`
+
+Get the reports for a single IP address (v4 or v6).
+
+```php
+AbuseIPDB::reports('127.0.0.1');
+```
+
+Optional parameters:
+- `maxAgeInDays`: The maximum age of reports to return (1-365), defaults to 30
+- `page`: The page number to get for the paginated response, defaults to 1
+- `perPage`: The number of reports to get per page (1-100), defaults to 25
+
+`Blacklist`
+
+Get the AbuseIPDB blacklist.
+
+```php
+AbuseIPDB::blacklist();
+```
+
+Optional parameters:
+- `confidenceMinimum`: The minimum confidence score to include an IP in the blacklist (25-100), defaults to 100
+- `limit`: The maximum number of blacklisted IPs to return, defaults to 10000
+- `plaintext`: Whether to return the blacklist in plaintext (a plain array of IPs), defaults to false
+- `onlyCountries`: Only include IPs from these countries (use 2-letter country codes)
+- `exceptCountries`: Exclude IPs from these countries (use 2-letter country codes)
+- `ipVersion`: The IP version to return (4 or 6), defaults to both
+
+`CheckBlock`
+
+Checks an entire subnet against the AbuseIPDB database.
+
+```php
+AbuseIPDB::checkBlock('127.0.0.1/28');
+```
+
+Optional parameters:
+- `maxAgeInDays`: The maximum age of reports to return (1-365), defaults to 30
+
+`BulkReport`
+
+Report multiple IP addresses to AbuseIPDB in bulk from a csv string.
+
+```php
+AbuseIPDB::bulkReport('bulk-report.csv');
+```
+
+`ClearAddress`
+
+Deletes your reports for a specific address from the AbuseIPDB database.
+
+```php
+AbuseIPDB::clearAddress('127.0.0.1');
+```
+
+> [!TIP]
+> You can find a complete documentation of the available methods [here](https://docs.abuseipdb.com).
 
 ### Quick start for SuspiciousOperationException reporting
 
@@ -73,143 +159,6 @@ if ($e instanceof SuspiciousOperationException) {
 ```
 
 Now, your project will automatically report to AbuseIPDB when a `SuspiciousOperationException` is thrown.
-
-## Main Functions
-
-This package implements functions to easily interact with endpoints of the AbuseIPDB API. These functions are found in `AbuseIPDBLaravel.php` and can be called statically with the `AbuseIPDB` facade.
-
-### Parent response object
-
-All custom response objects extend the custom AbuseResponse class, which extracts certain headers from the response and makes them accessible programmatically. See below:
-
-```php
-use AbuseIPDB\ResponseObjects\AbuseResponse; 
-$response = new AbuseResponse($httpResponse);
-
-$response->x_ratelimit_limit
-$response->x_ratelimit_remaining;
-$response->content_type;
-$response->cache_control;
-$response->cf_cache_status;
-```
-
-When handling responses that call an endpoint with custom responses, include the following at the top of file with requesting code:
-
-```php
-use AbuseIPDB\ResponseObjects;
-```
-
-Then those object types can be referenced as follows:
-
-```php
-ResponseObjects\AbuseResponse
-ResponseObjects\CheckResponse
-ResponseObjects\ReportResponse
-```
-
-etc.
-
-### Endpoint specific methods
-
-As of current version, this package has methods to access all public APIv2 endpoints. When requests are made to these endpoints, endpoint-specific response objects will be returned, which extend the `Illuminate\Http\Client\Response` object. If there is an error, a custom exception will be thrown. Check our <a href="https://docs.abuseipdb.com/" target="_blank">APIv2 documentation</a> for a list of returned values from each endpoint.
-
-### check
-
-The `check()` method makes a request to the <a href="https://docs.abuseipdb.com/#check-endpoint" target="_blank">check endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function check(string $ipAddress, int $maxAgeInDays = 30, bool $verbose = false): ResponseObjects\CheckResponse
-```
-
-string `$ipAddress` The IP address to check
-
-int `$maxAgeInDays` The maximum age of reports to return (1-365), defaults to 30
-
-bool `$verbose` Whether to include verbose information (reports), defaults to false
-
-### report
-
-The `report()` method makes a request to the <a href="https://docs.abuseipdb.com/#report-endpoint" target="_blank">report endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function report(string $ip, array|int $categories, string $comment = null, DateTime $timestamp = null): ResponseObjects\ReportResponse
-```
-
-string `$ip` The IP address to report
-
-array|int `$categories` Either one or multiple categories to report the IP address for
-
-string|null `$comment` An optional comment to include with the report, for example a logged indicator of attack
-
-DateTime|null `$timestamp` An optional timestamp to include with the report indicating the time of attack
-
-### reports
-
-The `reports()` method makes a request to the <a href="https://docs.abuseipdb.com/#reports-endpoint" target="_blank">reports endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function reports(string $ipAddress, int $maxAgeInDays = 30, int $page = 1, int $perPage = 25): ResponseObjects\ReportsPaginatedResponse
-```
-
-string `$ipAddress` The IP address to get reports for
-
-int `$maxAgeInDays` The maximum age of reports to return (1-365), defaults to 30
-
-int `$page` The page number to get for the paginated response
-
-int `$perPage` The number of reports to get per page
-
-### blacklist
-
-The `blacklist()` method makes a request to the <a href="https://docs.abuseipdb.com/#blacklist-endpoint" target="_blank">blacklist endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], int $ipVersion = null): ResponseObjects\BlacklistResponse|ResponseObjects\BlacklistPlaintextResponse
-```
-
-int `$confidenceMinimum` The minimum confidence score to include an IP in the blacklist
-
-int `$limit` The maximum number of blacklisted IPs to return, defaults to 10000
-
-bool `$plaintext` Whether to return the blacklist in plaintext (a plain array of IPs), defaults to false
-
-array `$onlyCountries` Only include IPs from these countries (use 2-letter country codes)
-
-array `$exceptCountries` Exclude IPs from these countries (use 2-letter country codes)
-
-int|null `$ipVersion` The IP version to return (4 or 6), defaults to both
-
-### checkBlock
-
-The `checkBlock()` method makes a request to the <a href="https://docs.abuseipdb.com/#check-block-endpoint" target="_blank">check-block endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function checkBlock(string $network, int $maxAgeInDays = 30): ResponseObjects\CheckBlockResponse
-```
-
-string `$network` The network to check in CIDR notation (e.g. 127.0.0.1/28)
-
-int `$maxAgeInDays` The maximum age of reports to return (1-365), defaults to 30
-
-### bulkReport
-
-The `bulkReport()` method makes a request to the <a href="https://docs.abuseipdb.com/#bulk-report-endpoint" target="_blank">bulk-report endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function bulkReport(string $csvFileContents): ResponseObjects\BulkReportResponse
-```
-
-string `$csvFileContents` The contents of the csv file to upload
-
-### clearAddress
-
-The `clearAddress()` method makes a request to the <a href="https://docs.abuseipdb.com/#clear-address-endpoint" target="_blank">clear-address endpoint</a> of the AbuseIPDB API. Its signature is
-
-```php
-public function clearAddress(string $ipAddress): ResponseObjects\ClearAddressResponse
-```
-
-string `$ipAddress` The IP address to clear reports for
 
 ## Exceptions
 
