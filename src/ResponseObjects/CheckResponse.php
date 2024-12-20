@@ -22,7 +22,7 @@ class CheckResponse extends AbuseResponse
 
     public string $usageType;
 
-    public string $isp;
+    public ?string $isp;
 
     public ?string $domain;
 
@@ -70,7 +70,7 @@ class CheckResponse extends AbuseResponse
         $this->reports = [];
         if (isset($data->reports)) {
             foreach ($data->reports as $report) {
-                array_push($this->reports, new ReportInfo($report));
+                $this->reports[] = new ReportInfo($report);
             }
         }
     }
