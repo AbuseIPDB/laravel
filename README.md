@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/AbuseIPDB/laravel" target="_blank">
-        <img src=".github/logo.png" alt="AbuseIPDB Logo" />
+        <img src=".github/logo.svg" alt="AbuseIPDB Logo" />
     </a>
 </p>
 
