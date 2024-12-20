@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
-    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/dt/AbuseIPDB/laravel" alt="Total Downloads"></a>
-    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/v/AbuseIPDB/laravel" alt="Latest Stable Version"></a>
-    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/l/AbuseIPDB/laravel" alt="License"></a>
+    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/dt/AbuseIPDB/laravel.svg" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/v/AbuseIPDB/laravel.svg" alt="Latest Stable Version"></a>
+    <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/l/AbuseIPDB/laravel.svg" alt="License"></a>
 </p>
 
 
