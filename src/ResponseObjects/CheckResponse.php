@@ -2,6 +2,7 @@
 
 namespace AbuseIPDB\ResponseObjects;
 
+use DateTimeInterface;
 use Illuminate\Http\Client\Response;
 use AbuseIPDB\ResponseObjects\ExtraClasses\ReportInfo;
 use DateTime;
@@ -64,7 +65,7 @@ class CheckResponse extends AbuseResponse
         $this->numDistinctUsers = $data->numDistinctUsers;
         $this->countryName = $data->countryName ?? null;
 
-        $lastReportedAtParsed = DateTime::createFromFormat(DateTime::ATOM, $data->lastReportedAt);
+        $lastReportedAtParsed = DateTime::createFromFormat(DateTimeInterface::ATOM, $data->lastReportedAt);
         $this->lastReportedAt = $lastReportedAtParsed ?: null;
 
         $this->reports = [];
