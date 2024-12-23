@@ -175,8 +175,8 @@ Now, your project will automatically report to AbuseIPDB when a `SuspiciousOpera
 
 ## Contributing
 
-Please see our [contribution guide](.github/CONTRIBUTING) for more information.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for more information.
 
 ## License
 
-This package is licensed under the [MIT License](LICENSE).
+This package is licensed under the [MIT License](LICENSE.md).
