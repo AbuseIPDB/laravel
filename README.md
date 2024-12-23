@@ -10,7 +10,6 @@
     <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/l/AbuseIPDB/laravel.svg" alt="License"></a>
 </p>
 
-
 # AbuseIPDB
 
 Package to easily integrate the AbuseIPDB API with your Laravel project.
@@ -29,10 +28,8 @@ After installing, you need to add `ABUSEIPDB_API_KEY` to your `.env` file.
 ABUSEIPDB_API_KEY=your_key
 ```
 
-Register on [abuseipdb.com](https://www.abuseipdb.com/) to get a free API key.
-
-> [!WARNING]
-> Remember, the AbuseIPDB API keys are to be treated like private keys -- don't have them publicly accessible!
+> [!NOTE]
+> Register on [abuseipdb.com](https://www.abuseipdb.com/) to get a free API key.
 
 ## Usage
 
@@ -120,73 +117,62 @@ Deletes your reports for a specific address from the AbuseIPDB database.
 AbuseIPDB::clearAddress('127.0.0.1');
 ```
 
-> [!TIP]
+> [!NOTE]
 > You can find a complete documentation of the available methods [here](https://docs.abuseipdb.com).
 
-### Quick start for SuspiciousOperationException reporting
+### Quick start for automatic reporting of suspicious operations
 
-This package has support for automatically reporting instances of Symfony's `SuspiciousOperationException` in your Laravel project. To use this functionality, include the following code in your projects `app\Exceptions\Handler.php`:
+This package supports automatically reporting instances of Symfony's `SuspiciousOperationException`. 
 
-#### At the top of file
+To use this functionality, update your `app\Exceptions\Handler.php` to something like this:
 
 ```php
-use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+<?php
+
+namespace App\Exceptions;
+
 use AbuseIPDB\AbuseIPDBExceptionReporter;
-```
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Throwable;
 
-#### Inside of the Handler's `register()` function
+class Handler extends ExceptionHandler
+{
 
-```php
- $this->stopIgnoring(SuspiciousOperationException::class);
-```
-
-#### Inside of register function's `$this->reportable(function (Throwable $e) {}`
-
-```php
-if ($e instanceof SuspiciousOperationException) {
-    AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
+    // ...
+ 
+    public function register(): void
+    {
+        $this->stopIgnoring(SuspiciousOperationException::class);
+    
+        $this->reportable(function (Throwable $e) {
+            if ($e instanceof SuspiciousOperationException) {
+                AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
+            }
+        });
+    }
 }
-```
-
-#### If your handler's `register()` does not contain the aforementioned `$this->reportable`
-
-```php
- $this->reportable(function (Throwable $e) {
-    if ($e instanceof SuspiciousOperationException) {
-        AbuseIPDBExceptionReporter::reportSuspiciousOperationException();
-    }    
-});
 ```
 
 Now, your project will automatically report to AbuseIPDB when a `SuspiciousOperationException` is thrown.
 
-## Exceptions
 
-In the event of an error, this package will throw an expection from the `Abuseipdb\Exceptions` namespace. Those exceptions include the following:
+### Exceptions
 
-```php
-InvalidParameterException   // Parameter passed in was invalid for the API.
-MissingAPIKeyException  // Your API key in your .env file was not found or invalid.
-PaymentRequiredException    // 402 error was thrown by API, indicating feature needs a higher subscription.
-TooManyRequestsException    // 429 error was thrown by API, indicating request limit has been exceeded.
-UnprocessableContentException   // 422 error was thrown by API, indicating request parameters could not be handled, either missing or incorrect.
-UnconventionalErrorException    // Error code other than 402, 422, or 429 was returned by the API.
-```
+In the event of an error, this package will throw an exception from the `Abuseipdb\Exceptions` namespace.
+Those exceptions include the following:
 
-If you'd like to handle these exceptions:
+`InvalidParameterException`: Parameter passed in was invalid for the API.
 
-```php
-use AbuseIPDB\Exceptions; 
+`MissingAPIKeyException`: Your API key in your .env file was not found or invalid.
 
-try {
-    /* some code */
-}
-catch(Throwable $e) {
-    if($e instanceof Exceptions\TooManyRequestsException) {
-        //429 was thrown, do something to address issue
-    }
-}
-```
+`PaymentRequiredException`: 402 error was thrown by API, indicating feature needs a higher subscription.
+
+`TooManyRequestsException`: 429 error was thrown by API, indicating request limit has been exceeded.
+
+`UnprocessableContentException`: 422 error was thrown by API, indicating request parameters could not be handled, either missing or incorrect.
+
+`UnconventionalErrorException`: Error code other than 402, 422, or 429 was returned by the API.
 
 ## Testing (for package developers)
 
