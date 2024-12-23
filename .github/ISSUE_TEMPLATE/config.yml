@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://docs.abuseipdb.com
+    about: Check out our documentation for more information.
+  - name: FAQ
+    url: https://abuseipdb.com/faq
+    about: Check out our FAQ for more information.
+  - name: Contact Us
+    url: https://abuseipdb.com/contact
+    about: Do you have any questions, comments, suggestions or news tip to pass along to AbuseIPDB? Please let us know.
