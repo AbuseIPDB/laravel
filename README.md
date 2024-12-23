@@ -10,7 +10,7 @@
     <a href="https://packagist.org/packages/AbuseIPDB/laravel"><img src="https://img.shields.io/packagist/l/AbuseIPDB/laravel.svg" alt="License"></a>
 </p>
 
-# AbuseIPDB
+## AbuseIPDB
 
 Package to easily integrate the AbuseIPDB API with your Laravel project.
 
@@ -120,7 +120,24 @@ AbuseIPDB::clearAddress('127.0.0.1');
 > [!NOTE]
 > You can find a complete documentation of the available methods [here](https://docs.abuseipdb.com).
 
-### Quick start for automatic reporting of suspicious operations
+### Exceptions
+
+In the event of an error, this package will throw an exception from the `Abuseipdb\Exceptions` namespace.
+Those exceptions include the following:
+
+`InvalidParameterException`: Parameter passed in was invalid for the API.
+
+`MissingAPIKeyException`: Your API key in your .env file was not found or invalid.
+
+`PaymentRequiredException`: 402 error was thrown by API, indicating feature needs a higher subscription.
+
+`TooManyRequestsException`: 429 error was thrown by API, indicating request limit has been exceeded.
+
+`UnprocessableContentException`: 422 error was thrown by API, indicating request parameters could not be handled, either missing or incorrect.
+
+`UnconventionalErrorException`: Error code other than 402, 422, or 429 was returned by the API.
+
+## Quick start for automatic reporting of suspicious operations
 
 This package supports automatically reporting instances of Symfony's `SuspiciousOperationException`. 
 
@@ -156,26 +173,10 @@ class Handler extends ExceptionHandler
 
 Now, your project will automatically report to AbuseIPDB when a `SuspiciousOperationException` is thrown.
 
+## Contributing
 
-### Exceptions
+Please see our [contribution guide](.github/CONTRIBUTING) for more information.
 
-In the event of an error, this package will throw an exception from the `Abuseipdb\Exceptions` namespace.
-Those exceptions include the following:
+## License
 
-`InvalidParameterException`: Parameter passed in was invalid for the API.
-
-`MissingAPIKeyException`: Your API key in your .env file was not found or invalid.
-
-`PaymentRequiredException`: 402 error was thrown by API, indicating feature needs a higher subscription.
-
-`TooManyRequestsException`: 429 error was thrown by API, indicating request limit has been exceeded.
-
-`UnprocessableContentException`: 422 error was thrown by API, indicating request parameters could not be handled, either missing or incorrect.
-
-`UnconventionalErrorException`: Error code other than 402, 422, or 429 was returned by the API.
-
-## Testing (for package developers)
-
-If using the provided test suite, please note that the test will only run error-free once every 15 minutes. The AbuseIPDB API will throw an error if an IP address is reported more than once in a period of 15 minutes, so any report endpoint tests will throw errors. Any tests that do not use the report endpoint will still work without any waiting period.
-
-To add your API key for tests, copy the `.env.testing.example` file to `.env.testing` and fill in the `ABUSEIPDB_API_KEY` and `BAD_IP_TO_TEST` vars (you can get one from the AbuseIPDB site, make sure it has plenty of reports against it). The `ABUSEIPDB_API_BASE_URL` can be left as is.
+This package is licensed under the [MIT License](LICENSE).
