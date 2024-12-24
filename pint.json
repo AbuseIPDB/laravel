@@ -1,6 +1,36 @@
 {
     "preset": "psr12",
     "rules": {
+        "array_indentation": true,
+        "array_push": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "no_whitespace_before_comma_in_array": true,
+        "normalize_index_brace": true,
+        "trim_array_spaces": true,
+        "whitespace_after_comma_in_array": true,
+        "modernize_types_casting": true,
+        "native_type_declaration_casing": true,
+        "nullable_type_declaration": {
+            "syntax": "question_mark"
+        },
+        "nullable_type_declaration_for_default_null_value": {
+            "use_nullable_type_declaration": true
+        },
+        "types_spaces": {
+            "space": "none"
+        },
+        "simplified_if_return": true,
+        "method_argument_space": {
+            "after_heredoc": true,
+            "attribute_placement": "standalone",
+            "keep_multiple_spaces_after_comma": false,
+            "on_multiline": "ensure_fully_multiline"
+        },
+        "declare_equal_normalize": {
+            "space": "single"
+        },
         "no_blank_lines_after_phpdoc": true,
         "no_empty_phpdoc": true,
         "no_trailing_whitespace_in_comment": true,
@@ -27,28 +57,7 @@
         "phpdoc_trim_consecutive_blank_line_separation": true,
         "phpdoc_types": true,
         "phpdoc_types_order": true,
-        "phpdoc_var_annotation_correct_order": true,
-        "modernize_types_casting": true,
-        "native_type_declaration_casing": true,
-        "nullable_type_declaration": {
-            "syntax": "question_mark"
-        },
-        "nullable_type_declaration_for_default_null_value": {
-            "use_nullable_type_declaration": true
-        },
-        "types_spaces": {
-            "space": "none"
-        },
-        "simplified_if_return": true,
-        "method_argument_space": {
-            "after_heredoc": true,
-            "attribute_placement": "standalone",
-            "keep_multiple_spaces_after_comma": false,
-            "on_multiline": "ensure_fully_multiline"
-        },
-        "declare_equal_normalize": {
-            "space": "single"
-        }
+        "phpdoc_var_annotation_correct_order": true
     },
     "exclude": [
         "vendor"
