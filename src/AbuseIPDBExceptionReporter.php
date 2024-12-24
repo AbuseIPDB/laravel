@@ -7,9 +7,7 @@ use AbuseIPDB\Facades\AbuseIPDB;
 class AbuseIPDBExceptionReporter
 {
     /**
-     * Report a suspicious operation to AbuseIPDB, gathering information from the current request
-     * 
-     * 
+     * Report a suspicious operation to AbuseIPDB, gathering information from the current request.
      */
     public static function reportSuspiciousOperationException(): ResponseObjects\ReportResponse|false
     {
