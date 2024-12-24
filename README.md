@@ -175,7 +175,7 @@ Now, your project will automatically report to AbuseIPDB when a `SuspiciousOpera
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for more information.
+Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for more information.
 
 ## License
 
