@@ -27,7 +27,7 @@ class BlacklistResponse extends AbuseResponse
 
         $this->blacklistedIPs = [];
         foreach ($data as $blacklistedIP) {
-            array_push($this->blacklistedIPs, new BlacklistedIP($blacklistedIP));
+            $this->blacklistedIPs[] = new BlacklistedIP($blacklistedIP);
         }
     }
 }

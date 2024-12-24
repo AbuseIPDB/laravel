@@ -25,7 +25,7 @@ class BulkReportResponse extends AbuseResponse
         $this->invalidReports = [];
         if (isset($data->invalidReports)) {
             foreach ($data->invalidReports as $invalidReport) {
-                array_push($this->invalidReports, new BulkInvalidReport($invalidReport));
+                $this->invalidReports[] = new BulkInvalidReport($invalidReport);
             }
         }
     }

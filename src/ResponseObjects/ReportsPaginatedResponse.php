@@ -41,7 +41,7 @@ class ReportsPaginatedResponse extends AbuseResponse
 
         $this->results = [];
         foreach ($data->results as $result) {
-            array_push($this->results, new ReportInfo($result));
+            $this->results[] = new ReportInfo($result);
         }
     }
 }
