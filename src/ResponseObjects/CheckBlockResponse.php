@@ -40,7 +40,7 @@ class CheckBlockResponse extends AbuseResponse
         $this->reportedAddress = [];
         if (isset($data->reportedAddress)) {
             foreach ($data->reportedAddress as $IPinfo) {
-                array_push($this->reportedAddress, new CheckBlockIP($IPinfo));
+                $this->reportedAddress[] = new CheckBlockIP($IPinfo);
             }
         }
     }
