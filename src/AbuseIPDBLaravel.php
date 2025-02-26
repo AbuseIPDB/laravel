@@ -76,7 +76,7 @@ class AbuseIPDBLaravel
      * @throws PaymentRequiredException
      * @throws UnconventionalErrorException
      */
-    private function makeRequest($endpointName, $parameters, $acceptType = 'application/json', ?string $fileContents = null): ?Response
+    private function lazyLoadSetup($acceptType = 'application/json')
     {
         if (! config('abuseipdb.api_key')) {
             throw new MissingAPIKeyException('ABUSEIPDB_API_KEY must be set in .env with an AbuseIPBD API key.');
@@ -85,7 +85,7 @@ class AbuseIPDBLaravel
         /**
          * @var PendingRequest
          */
-        $client = Http::withHeaders([
+        $this->client = Http::withHeaders([
             'X-Request-Source' => 'Laravel_'.app()->version().';Laravel_'.config('abuseipdb.version').';',
             'Key' => config('abuseipdb.api_key'),
             'Accept' => $acceptType,
@@ -110,19 +110,19 @@ class AbuseIPDBLaravel
     private function makeRequest($endpointName, $parameters, $acceptType = 'application/json', ?string $fileContents = null): ?Response
     {
         if (! $this->client) {
-            $this->lazyLoadSetup();
+            $this->lazyLoadSetup($acceptType);
         }
 
         $requestMethod = self::ENDPOINTS[$endpointName];
 
         if ($fileContents) {
-            $client->attach('csv', $fileContents, 'report.csv');
+            $this->client->attach('csv', $fileContents, 'report.csv');
         }
 
         /**
          * @var Response
          */
-        $response = $client->$requestMethod($endpointName, $parameters);
+        $response = $this->client->$requestMethod($endpointName, $parameters);
 
         $status = $response->status();
 
