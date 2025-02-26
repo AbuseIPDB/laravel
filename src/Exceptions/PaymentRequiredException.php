@@ -4,4 +4,6 @@ namespace AbuseIPDB\Exceptions;
 
 use Exception;
 
-class PaymentRequiredException extends Exception {}
+class PaymentRequiredException extends Exception
+{
+}

@@ -62,14 +62,12 @@ class AbuseIPDBLaravel
     ];
 
     /**
-     * The "client" to make requests with.
+     * Function that all requests will be passed through.
      *
-     * @var PendingRequest
-     */
-    private $client;
-
-    /**
-     * Lazy loads client and sets base url.
+     * @param string $endpointName The name of the endpoint to request
+     * @param array $parameters The parameters to send with the request
+     * @param string $acceptType The accept type for the request (default is application/json only overridden for plain blacklist)
+     * @param null|string $fileContents The contents of the file to upload (for bulk-report from CSV)
      *
      * @throws UnprocessableContentException
      * @throws TooManyRequestsException
@@ -92,26 +90,6 @@ class AbuseIPDBLaravel
         ])->withOptions([
             'verify' => ! app()->islocal(),
         ])->baseUrl(config('abuseipdb.base_url'));
-    }
-
-    /**
-     * Function that all requests will be passed through.
-     *
-     * @param string $endpointName The name of the endpoint to request
-     * @param array $parameters The parameters to send with the request
-     * @param string $acceptType The accept type for the request (default is application/json only overridden for plain blacklist)
-     * @param null|string $fileContents The contents of the file to upload (for bulk-report from CSV)
-     *
-     * @throws UnprocessableContentException
-     * @throws TooManyRequestsException
-     * @throws PaymentRequiredException
-     * @throws UnconventionalErrorException
-     */
-    private function makeRequest($endpointName, $parameters, $acceptType = 'application/json', ?string $fileContents = null): ?Response
-    {
-        if (! $this->client) {
-            $this->lazyLoadSetup();
-        }
 
         $requestMethod = self::ENDPOINTS[$endpointName];
 
@@ -148,9 +126,9 @@ class AbuseIPDBLaravel
     /**
      * Checks an IP address against the AbuseIPDB database.
      *
-     * @param  string  $ipAddress  The IP address to check
-     * @param  int  $maxAgeInDays  The maximum age of reports to return (1~365), defaults to 30
-     * @param  bool  $verbose  Whether to include verbose information (reports), defaults to false
+     * @param string $ipAddress The IP address to check
+     * @param int $maxAgeInDays The maximum age of reports to return (1~365), defaults to 30
+     * @param bool $verbose Whether to include verbose information (reports), defaults to false
      *
      * @throws InvalidParameterException
      */
@@ -207,10 +185,10 @@ class AbuseIPDBLaravel
     /**
      * Get the reports for a single IP address (v4 or v6).
      *
-     * @param  string  $ipAddress  The IP address to get reports for
-     * @param  int  $maxAgeInDays  The maximum age of reports to return (1~365), defaults to 30
-     * @param  int  $page  The page number to get for the paginated response
-     * @param  int  $perPage  The number of reports to get per page
+     * @param string $ipAddress The IP address to get reports for
+     * @param int $maxAgeInDays The maximum age of reports to return (1~365), defaults to 30
+     * @param int $page The page number to get for the paginated response
+     * @param int $perPage The number of reports to get per page
      *
      * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
