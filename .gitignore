@@ -1,5 +1,23 @@
-vendor
+# Composer Related
+/vendor
 composer.lock
+
+# Caches
+.phpunit.cache
 .phpunit.result.cache
-.idea
-.env.testing
+
+# IDE Helper
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Editors
+/.idea
+/.fleet
+/.vscode
+
+# Misc
+phpstan.neon
+testbench.yaml
+/coverage
+.env*

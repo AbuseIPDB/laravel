@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Http;
 class AbuseIPDBLaravel
 {
     /**
-     * API endpoints available with their respective HTTP request verbs
+     * API endpoints available with their respective HTTP request verbs.
      *
      * @var array
      */
@@ -31,7 +31,7 @@ class AbuseIPDBLaravel
     ];
 
     /**
-     * Attacks categories available with their respective identifier
+     * Attacks categories available with their respective identifier.
      *
      * @var array
      */
@@ -62,12 +62,14 @@ class AbuseIPDBLaravel
     ];
 
     /**
-     * Function that all requests will be passed through
+     * The "client" to make requests with.
      *
-     * @param  string  $endpointName  The name of the endpoint to request
-     * @param  array  $parameters  The parameters to send with the request
-     * @param  string  $acceptType  The accept type for the request (default is application/json only overridden for plain blacklist)
-     * @param  string|null  $fileContents  The contents of the file to upload (for bulk-report from CSV)
+     * @var PendingRequest
+     */
+    private $client;
+
+    /**
+     * Lazy loads client and sets base url.
      *
      * @throws UnprocessableContentException
      * @throws TooManyRequestsException
@@ -90,6 +92,26 @@ class AbuseIPDBLaravel
         ])->withOptions([
             'verify' => ! app()->islocal(),
         ])->baseUrl(config('abuseipdb.base_url'));
+    }
+
+    /**
+     * Function that all requests will be passed through.
+     *
+     * @param string $endpointName The name of the endpoint to request
+     * @param array $parameters The parameters to send with the request
+     * @param string $acceptType The accept type for the request (default is application/json only overridden for plain blacklist)
+     * @param null|string $fileContents The contents of the file to upload (for bulk-report from CSV)
+     *
+     * @throws UnprocessableContentException
+     * @throws TooManyRequestsException
+     * @throws PaymentRequiredException
+     * @throws UnconventionalErrorException
+     */
+    private function makeRequest($endpointName, $parameters, $acceptType = 'application/json', ?string $fileContents = null): ?Response
+    {
+        if (! $this->client) {
+            $this->lazyLoadSetup();
+        }
 
         $requestMethod = self::ENDPOINTS[$endpointName];
 
@@ -124,7 +146,7 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Checks an IP address against the AbuseIPDB database
+     * Checks an IP address against the AbuseIPDB database.
      *
      * @param  string  $ipAddress  The IP address to check
      * @param  int  $maxAgeInDays  The maximum age of reports to return (1~365), defaults to 30
@@ -151,13 +173,12 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Reports an IP address to AbuseIPDB
+     * Reports an IP address to AbuseIPDB.
      *
-     * @param  string  $ip  The IP address to report
-     * @param  array|int  $categories  EIther one or multiple categories to report the IP address for
-     * @param  string|null  $comment  An optional comment to include with the report, for example a logged indicator of attack
-     * @param  DateTime|null  $timestamp  An optional timestamp to include with the report indicating the time of attack
-     *
+     * @param string $ip The IP address to report
+     * @param array|int $categories EIther one or multiple categories to report the IP address for
+     * @param null|string $comment An optional comment to include with the report, for example a logged indicator of attack
+     * @param null|DateTime $timestamp An optional timestamp to include with the report indicating the time of attack
      * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
     public function report(string $ip, array|int $categories, ?string $comment = null, ?DateTime $timestamp = null): ResponseObjects\ReportResponse
@@ -184,7 +205,7 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Get the reports for a single IP address (v4 or v6)
+     * Get the reports for a single IP address (v4 or v6).
      *
      * @param  string  $ipAddress  The IP address to get reports for
      * @param  int  $maxAgeInDays  The maximum age of reports to return (1~365), defaults to 30
@@ -219,15 +240,14 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Gets the AbuseIPDB blacklist
+     * Gets the AbuseIPDB blacklist.
      *
-     * @param  int  $confidenceMinimum  The minimum confidence score to include an IP in the blacklist
-     * @param  int  $limit  The maximum number of blacklisted IPs to return, defaults to 10000
-     * @param  bool  $plaintext  Whether to return the blacklist in plaintext (a plain array of IPs), defaults to false
-     * @param  array  $onlyCountries  Only include IPs from these countries (use 2-letter country codes)
-     * @param  array  $exceptCountries  Exclude IPs from these countries (use 2-letter country codes)
-     * @param  int|null  $ipVersion  The IP version to return (4 or 6), defaults to both
-     *
+     * @param int $confidenceMinimum The minimum confidence score to include an IP in the blacklist
+     * @param int $limit The maximum number of blacklisted IPs to return, defaults to 10000
+     * @param bool $plaintext Whether to return the blacklist in plaintext (a plain array of IPs), defaults to false
+     * @param array $onlyCountries Only include IPs from these countries (use 2-letter country codes)
+     * @param array $exceptCountries Exclude IPs from these countries (use 2-letter country codes)
+     * @param null|int $ipVersion The IP version to return (4 or 6), defaults to both
      * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
     public function blacklist(int $confidenceMinimum = 100, int $limit = 10000, bool $plaintext = false, $onlyCountries = [], $exceptCountries = [], ?int $ipVersion = null): ResponseObjects\BlacklistResponse|ResponseObjects\BlacklistPlaintextResponse
@@ -278,11 +298,10 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Checks an entire subnet against the AbuseIPDB database
+     * Checks an entire subnet against the AbuseIPDB database.
      *
-     * @param  string  $network  The network to check in CIDR notation (e.g. 127.0.0.1/28)
-     * @param  int  $maxAgeInDays  The maximum age of reports to return (1~365), defaults to 30
-     *
+     * @param string $network The network to check in CIDR notation (e.g. 127.0.0.1/28)
+     * @param int $maxAgeInDays The maximum age of reports to return (1~365), defaults to 30
      * @throws \AbuseIPDB\Exceptions\InvalidParameterException
      */
     public function checkBlock(string $network, int $maxAgeInDays = 30): ResponseObjects\CheckBlockResponse
@@ -301,9 +320,9 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Reports multiple IP addresses to AbuseIPDB in bulk from a csv string
+     * Reports multiple IP addresses to AbuseIPDB in bulk from a csv string.
      *
-     * @param  string  $csvFileContents  The contents of the csv file to upload
+     * @param string $csvFileContents The contents of the csv file to upload
      */
     public function bulkReport(string $csvFileContents): ResponseObjects\BulkReportResponse
     {
@@ -313,9 +332,9 @@ class AbuseIPDBLaravel
     }
 
     /**
-     * Deletes your reports for a specific address from the AbuseIPDB database
+     * Deletes your reports for a specific address from the AbuseIPDB database.
      *
-     * @param  string  $ipAddress  The IP address to clear reports for
+     * @param string $ipAddress The IP address to clear reports for
      */
     public function clearAddress(string $ipAddress): ResponseObjects\ClearAddressResponse
     {
