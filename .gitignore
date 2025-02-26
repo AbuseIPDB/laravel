@@ -20,3 +20,4 @@ _ide_helper_models.php
 phpstan.neon
 testbench.yaml
 /coverage
+.env*
