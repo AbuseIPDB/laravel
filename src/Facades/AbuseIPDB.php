@@ -3,6 +3,14 @@
 namespace AbuseIPDB\Facades;
 
 use AbuseIPDB\AbuseIPDBLaravel;
+use AbuseIPDB\ResponseObjects\BlacklistPlaintextResponse;
+use AbuseIPDB\ResponseObjects\BlacklistResponse;
+use AbuseIPDB\ResponseObjects\BulkReportResponse;
+use AbuseIPDB\ResponseObjects\CheckBlockResponse;
+use AbuseIPDB\ResponseObjects\CheckResponse;
+use AbuseIPDB\ResponseObjects\ClearAddressResponse;
+use AbuseIPDB\ResponseObjects\ReportResponse;
+use AbuseIPDB\ResponseObjects\ReportsPaginatedResponse;
 use Datetime;
 use Illuminate\Support\Facades\Facade;
 
@@ -19,7 +27,7 @@ use Illuminate\Support\Facades\Facade;
  */
 class AbuseIPDB extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return AbuseIPDBLaravel::class;
     }
