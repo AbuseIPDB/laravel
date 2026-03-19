@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": "^8.3",
-        "laravel/framework": "13.0"
+        "laravel/framework": "^13.0"
     },
     "require-dev": {
         "laravel/pint": "^1.29",
@@ -53,5 +53,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable" : true,
-    "version": "2.0.0"
+    "version": "2.0.1"
 }
